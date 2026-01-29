@@ -658,133 +658,100 @@ function Universities() {
                 >
                   {/* University Card */}
                   <div 
-                    className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 hover:border-white/30 transition-all duration-300 cursor-pointer"
+                    className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 group"
                     onClick={() => navigate(`/university/${university._id}`)}
                   >
-                    {/* University Image */}
-                    <div className="relative h-56 overflow-hidden">
-                      <img
-                        src={university.image || "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"}
-                        alt={university.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        onError={(e) => {
-                          e.target.src = "https://images.unsplash.com/photo-1562774053-701939374585?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80";
-                        }}
-                      />
-                      
-                      {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                      
-                      {/* Category Badge */}
-                      <div className="absolute top-4 left-4">
-                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          university.category === 'DREAM' ? 'bg-orange-500/80 backdrop-blur-sm' :
-                          university.category === 'TARGET' ? 'bg-yellow-500/80 backdrop-blur-sm' :
-                          university.category === 'SAFE' ? 'bg-green-500/80 backdrop-blur-sm' :
-                          'bg-gray-500/80 backdrop-blur-sm'
-                        }`}>
-                          {university.category || 'GENERAL'}
+                    {/* Card Header */}
+                    <div className="p-6 border-b border-gray-100 dark:border-gray-700">
+                      <div className="flex items-start justify-between mb-4">
+                        {/* University Logo/Icon */}
+                        <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                          <AcademicCapIcon className="w-8 h-8 text-white" />
+                        </div>
+                        
+                        {/* Status Badges */}
+                        <div className="flex gap-2">
+                          {university.category && (
+                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
+                              university.category === 'DREAM' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
+                              university.category === 'TARGET' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                              university.category === 'SAFE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                              'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'
+                            }`}>
+                              {university.category}
+                            </div>
+                          )}
+                          {university.shortlisted && (
+                            <div className="p-1.5 bg-yellow-100 rounded-full">
+                              <StarIconSolid className="w-4 h-4 text-yellow-600" />
+                            </div>
+                          )}
+                          {university.locked && (
+                            <div className="p-1.5 bg-red-100 rounded-full">
+                              <LockClosedIcon className="w-4 h-4 text-red-600" />
+                            </div>
+                          )}
                         </div>
                       </div>
                       
-                      {/* Status Badges */}
-                      <div className="absolute top-4 right-4 flex gap-2">
-                        {university.shortlisted && (
-                          <div className="px-3 py-1 bg-yellow-500/80 backdrop-blur-sm rounded-full">
-                            <StarIconSolid className="w-4 h-4 text-white" />
-                          </div>
-                        )}
-                        {university.locked && (
-                          <div className="px-3 py-1 bg-red-500/80 backdrop-blur-sm rounded-full">
-                            <LockClosedIcon className="w-4 h-4 text-white" />
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* University Info */}
-                      <div className="absolute bottom-0 left-0 right-0 p-6">
-                        <h3 className="text-white font-bold text-xl mb-1">{university.name}</h3>
-                        <div className="flex items-center text-gray-300 text-sm">
-                          <MapPinIcon className="w-4 h-4 mr-1" />
-                          {university.location}
-                        </div>
+                      {/* University Name and Location */}
+                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        {university.name}
+                      </h3>
+                      <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm">
+                        <MapPinIcon className="w-4 h-4 mr-1.5" />
+                        {university.location}
                       </div>
                     </div>
 
-                    {/* University Details */}
+                    {/* Card Body */}
                     <div className="p-6">
-                      {/* Quick Stats */}
+                      {/* Key Metrics */}
                       <div className="grid grid-cols-3 gap-4 mb-6">
-                        <div className="text-center">
-                          <p className="text-2xl font-bold text-white">#{university.ranking || 'N/A'}</p>
-                          <p className="text-xs text-gray-400">Rank</p>
+                        <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                          <p className="text-xl font-bold text-gray-900 dark:text-white">#{university.ranking || 'N/A'}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Rank</p>
                         </div>
-                        <div className="text-center">
-                          <p className="text-2xl font-bold text-white">
+                        <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                          <p className="text-xl font-bold text-gray-900 dark:text-white">
                             ${typeof university.tuitionFeePerYear === 'number' 
                               ? (university.tuitionFeePerYear / 1000).toFixed(0) + 'k'
                               : 'N/A'}
                           </p>
-                          <p className="text-xs text-gray-400">Tuition</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Tuition</p>
                         </div>
-                        <div className="text-center">
-                          <p className="text-2xl font-bold text-white">{university.acceptanceChance || 'Unknown'}</p>
-                          <p className="text-xs text-gray-400">Acceptance</p>
+                        <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                          <p className="text-xl font-bold text-gray-900 dark:text-white">{university.acceptanceChance || 'N/A'}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">Acceptance</p>
                         </div>
                       </div>
 
                       {/* AI Analysis */}
                       {user && (
-                        <div className="bg-indigo-500/10 rounded-lg p-3 mb-4">
-                          <div className="flex items-center gap-2 mb-1">
-                            <SparklesIcon className="w-4 h-4 text-indigo-400" />
-                            <span className="text-sm font-medium text-indigo-300">AI Analysis</span>
+                        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-lg p-4 mb-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <SparklesIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                            <span className="text-sm font-medium text-indigo-900 dark:text-indigo-300">AI Analysis</span>
                           </div>
-                          <p className="text-xs text-gray-300">
+                          <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
                             {university.matchReason || 'Complete your profile to see personalized recommendations'}
                           </p>
                           {university.fitScore && (
-                            <p className="text-xs text-gray-400 mt-1">
-                              Fit Score: {university.fitScore}/100
-                            </p>
-                          )}
-                          {university.recommendation && university.recommendation !== '🎓 Complete your profile to get personalized recommendations' && (
-                            <p className="text-xs text-gray-400 mt-1">
-                              {university.recommendation}
-                            </p>
-                          )}
-                          {university.acceptanceChance && university.acceptanceChance !== 'Unknown' && (
-                            <p className="text-xs text-gray-400 mt-1">
-                              Acceptance Chance: {university.acceptanceChance}
-                            </p>
+                            <div className="mt-2">
+                              <div className="flex justify-between items-center mb-1">
+                                <span className="text-xs text-gray-600 dark:text-gray-400">Fit Score</span>
+                                <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">{university.fitScore}/100</span>
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
+                                <div 
+                                  className="h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" 
+                                  style={{ width: `${university.fitScore}%` }} 
+                                />
+                              </div>
+                            </div>
                           )}
                         </div>
                       )}
-
-                      {/* Description */}
-                      <p className="text-gray-300 text-sm mb-6 line-clamp-2">
-                        {university.description || 'No description available'}
-                      </p>
-
-                      {/* Additional Info */}
-                      <div className="grid grid-cols-2 gap-3 mb-4 text-xs">
-                        <div>
-                          <p className="text-gray-400">Program:</p>
-                          <p className="text-white font-medium">{university.program || 'Not specified'}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Placement Rate:</p>
-                          <p className="text-white font-medium">{university.placementRate || 'N/A'}%</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Avg Salary:</p>
-                          <p className="text-white font-medium">${university.averageSalary || 'N/A'}</p>
-                        </div>
-                        <div>
-                          <p className="text-gray-400">Internships:</p>
-                          <p className="text-white font-medium">{university.internshipOpportunities || 'N/A'}</p>
-                        </div>
-                      </div>
 
                       {/* Action Buttons */}
                       <div className="flex gap-3">
@@ -793,31 +760,47 @@ function Universities() {
                             e.stopPropagation(); // Prevent card click
                             handleShortlist(university._id);
                           }}
-                          className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-300 ${
+                          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${
                             university.shortlisted
-                              ? 'bg-yellow-500 hover:bg-yellow-600 text-white'
-                              : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
+                              ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400'
+                              : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400'
                           }`}
                         >
-                          <StarIcon className="w-4 h-4 mr-2 inline" />
-                          {university.shortlisted ? 'Shortlisted' : 'Shortlist'}
+                          {university.shortlisted ? (
+                            <span className="flex items-center justify-center gap-1.5">
+                              <StarIconSolid className="w-4 h-4" />
+                              Shortlisted
+                            </span>
+                          ) : (
+                            <span className="flex items-center justify-center gap-1.5">
+                              <StarIcon className="w-4 h-4" />
+                              Shortlist
+                            </span>
+                          )}
                         </button>
+                        
                         <button
                           onClick={(e) => {
                             e.stopPropagation(); // Prevent card click
                             handleLock(university._id);
                           }}
-                          disabled={universities.some(u => u.locked && u._id !== university._id)}
-                          className={`flex-1 py-3 px-4 rounded-xl font-medium transition-all duration-300 ${
+                          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${
                             university.locked
-                              ? 'bg-red-500 hover:bg-red-600 text-white'
-                              : universities.some(u => u.locked && u._id !== university._id)
-                              ? 'bg-gray-600 text-white cursor-not-allowed opacity-50'
-                              : 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
+                              ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400'
+                              : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400'
                           }`}
                         >
-                          <LockClosedIcon className="w-4 h-4 mr-2 inline" />
-                          {university.locked ? 'Locked' : universities.some(u => u.locked && u._id !== university._id) ? 'Locked Another' : 'Lock'}
+                          {university.locked ? (
+                            <span className="flex items-center justify-center gap-1.5">
+                              <LockClosedIcon className="w-4 h-4" />
+                              Locked
+                            </span>
+                          ) : (
+                            <span className="flex items-center justify-center gap-1.5">
+                              <LockClosedIcon className="w-4 h-4" />
+                              Lock Decision
+                            </span>
+                          )}
                         </button>
                       </div>
                     </div>
@@ -825,8 +808,7 @@ function Universities() {
                 </motion.div>
             ))}
           </AnimatePresence>
-        </div>
-        </div>
+        </div> {/* Close universities grid */}
       </div>
     </div>
   );

@@ -319,6 +319,12 @@ export default function Profile() {
     }
   };
 
+  const updateFormData = (field, value) => {
+    // Update both ref and state for immediate access and reactivity
+    formDataRef.current[field] = value;
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   const handleCancel = () => {
     const profile = user?.profile || {};
     setFormData({
@@ -666,7 +672,7 @@ export default function Profile() {
                   <input
                     type="text"
                     value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) => updateFormData('name', e.target.value)}
                     disabled={!editing}
                     className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -681,7 +687,7 @@ export default function Profile() {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) => updateFormData('email', e.target.value)}
                     disabled={!editing}
                     className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
@@ -691,7 +697,7 @@ export default function Profile() {
                 <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
                 <textarea
                   value={formData.bio}
-                  onChange={(e) => setFormData(prev => ({ ...prev, bio: e.target.value }))}
+                  onChange={(e) => updateFormData('bio', e.target.value)}
                   disabled={!editing}
                   rows={4}
                   className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -720,7 +726,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Current Degree Level</label>
                     <select
                       value={formData.degree}
-                      onChange={(e) => setFormData(prev => ({ ...prev, degree: e.target.value }))}
+                      onChange={(e) => updateFormData('degree', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
@@ -738,7 +744,7 @@ export default function Profile() {
                     <input
                       type="text"
                       value={formData.subject}
-                      onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
+                      onChange={(e) => updateFormData('subject', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="e.g., Computer Science, Mechanical Engineering"
@@ -751,7 +757,7 @@ export default function Profile() {
                   <input
                     type="text"
                     value={formData.university}
-                    onChange={(e) => setFormData(prev => ({ ...prev, university: e.target.value }))}
+                    onChange={(e) => updateFormData('university', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="e.g., Massachusetts Institute of Technology"
@@ -764,7 +770,7 @@ export default function Profile() {
                     <input
                       type="text"
                       value={formData.gpa}
-                      onChange={(e) => setFormData(prev => ({ ...prev, gpa: e.target.value }))}
+                      onChange={(e) => updateFormData('gpa', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="e.g., 3.8/4.0 or 85%"
@@ -776,7 +782,7 @@ export default function Profile() {
                     <input
                       type="number"
                       value={formData.graduationYear}
-                      onChange={(e) => setFormData(prev => ({ ...prev, graduationYear: e.target.value }))}
+                      onChange={(e) => updateFormData('graduationYear', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="e.g., 2024"
@@ -795,7 +801,7 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Intended Degree</label>
                   <select
                     value={formData.intendedDegree}
-                    onChange={(e) => setFormData(prev => ({ ...prev, intendedDegree: e.target.value }))}
+                    onChange={(e) => updateFormData('intendedDegree', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
@@ -812,7 +818,7 @@ export default function Profile() {
                   <input
                     type="text"
                     value={formData.fieldOfStudy}
-                    onChange={(e) => setFormData(prev => ({ ...prev, fieldOfStudy: e.target.value }))}
+                    onChange={(e) => updateFormData('fieldOfStudy', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="e.g., Data Science, Engineering"
@@ -823,7 +829,7 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Intake Year</label>
                   <select
                     value={formData.intakeYear}
-                    onChange={(e) => setFormData(prev => ({ ...prev, intakeYear: e.target.value }))}
+                    onChange={(e) => updateFormData('intakeYear', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
@@ -844,9 +850,9 @@ export default function Profile() {
                           checked={formData.preferredCountries.includes(country)}
                           onChange={(e) => {
                             if (e.target.checked) {
-                              setFormData(prev => ({ ...prev, preferredCountries: [...prev.preferredCountries, country] }));
+                              updateFormData('preferredCountries', [...formData.preferredCountries, country]);
                             } else {
-                              setFormData(prev => ({ ...prev, preferredCountries: prev.preferredCountries.filter(c => c !== country) }));
+                              updateFormData('preferredCountries', formData.preferredCountries.filter(c => c !== country));
                             }
                           }}
                           disabled={!editing}
@@ -868,7 +874,7 @@ export default function Profile() {
                   <input
                     type="text"
                     value={formData.budgetRange}
-                    onChange={(e) => setFormData(prev => ({ ...prev, budgetRange: e.target.value }))}
+                    onChange={(e) => updateFormData('budgetRange', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="e.g., $20,000 - $30,000 per year"
@@ -879,7 +885,7 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Funding Plan</label>
                   <textarea
                     value={formData.fundingPlan}
-                    onChange={(e) => setFormData(prev => ({ ...prev, fundingPlan: e.target.value }))}
+                    onChange={(e) => updateFormData('fundingPlan', e.target.value)}
                     disabled={!editing}
                     rows={3}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -899,7 +905,7 @@ export default function Profile() {
                       <input
                         type="checkbox"
                         checked={formData.ieltsTaken}
-                        onChange={(e) => setFormData(prev => ({ ...prev, ieltsTaken: e.target.checked }))}
+                        onChange={(e) => updateFormData('ieltsTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
@@ -913,7 +919,7 @@ export default function Profile() {
                           <input
                             type="text"
                             value={formData.ieltsScore}
-                            onChange={(e) => setFormData(prev => ({ ...prev, ieltsScore: e.target.value }))}
+                            onChange={(e) => updateFormData('ieltsScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 7.5"
@@ -929,7 +935,7 @@ export default function Profile() {
                       <input
                         type="checkbox"
                         checked={formData.toeflTaken}
-                        onChange={(e) => setFormData(prev => ({ ...prev, toeflTaken: e.target.checked }))}
+                        onChange={(e) => updateFormData('toeflTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
@@ -943,7 +949,7 @@ export default function Profile() {
                           <input
                             type="text"
                             value={formData.toeflScore}
-                            onChange={(e) => setFormData(prev => ({ ...prev, toeflScore: e.target.value }))}
+                            onChange={(e) => updateFormData('toeflScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 100"
@@ -959,7 +965,7 @@ export default function Profile() {
                       <input
                         type="checkbox"
                         checked={formData.greTaken}
-                        onChange={(e) => setFormData(prev => ({ ...prev, greTaken: e.target.checked }))}
+                        onChange={(e) => updateFormData('greTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
@@ -973,7 +979,7 @@ export default function Profile() {
                           <input
                             type="text"
                             value={formData.greScore}
-                            onChange={(e) => setFormData(prev => ({ ...prev, greScore: e.target.value }))}
+                            onChange={(e) => updateFormData('greScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 320"
@@ -989,7 +995,7 @@ export default function Profile() {
                       <input
                         type="checkbox"
                         checked={formData.gmatTaken}
-                        onChange={(e) => setFormData(prev => ({ ...prev, gmatTaken: e.target.checked }))}
+                        onChange={(e) => updateFormData('gmatTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                       />
@@ -1003,7 +1009,7 @@ export default function Profile() {
                           <input
                             type="text"
                             value={formData.gmatScore}
-                            onChange={(e) => setFormData(prev => ({ ...prev, gmatScore: e.target.value }))}
+                            onChange={(e) => updateFormData('gmatScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 700"
@@ -1023,11 +1029,11 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Work Experience</label>
                   <textarea
                     value={formData.workExperience}
-                    onChange={(e) => setFormData(prev => ({ ...prev, workExperience: e.target.value }))}
+                    onChange={(e) => updateFormData('workExperience', e.target.value)}
                     disabled={!editing}
                     rows={3}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Describe your relevant work experience"
+                    placeholder="Describe your work experience, internships, etc."
                   />
                 </div>
 
@@ -1035,11 +1041,11 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Research Experience</label>
                   <textarea
                     value={formData.researchExperience}
-                    onChange={(e) => setFormData(prev => ({ ...prev, researchExperience: e.target.value }))}
+                    onChange={(e) => updateFormData('researchExperience', e.target.value)}
                     disabled={!editing}
                     rows={3}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Describe your research experience and publications"
+                    placeholder="Describe your research experience, projects, publications, etc."
                   />
                 </div>
 
@@ -1047,11 +1053,11 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Publications</label>
                   <textarea
                     value={formData.publications}
-                    onChange={(e) => setFormData(prev => ({ ...prev, publications: e.target.value }))}
+                    onChange={(e) => updateFormData('publications', e.target.value)}
                     disabled={!editing}
                     rows={3}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="List your publications (if any)"
+                    placeholder="List your publications, papers, etc."
                   />
                 </div>
 
@@ -1059,11 +1065,11 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Certifications</label>
                   <textarea
                     value={formData.certifications}
-                    onChange={(e) => setFormData(prev => ({ ...prev, certifications: e.target.value }))}
+                    onChange={(e) => updateFormData('certifications', e.target.value)}
                     disabled={!editing}
                     rows={3}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="List your relevant certifications"
+                    placeholder="List your certifications, licenses, etc."
                   />
                 </div>
               </div>
@@ -1077,7 +1083,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">SOP Status</label>
                     <select
                       value={formData.sopStatus}
-                      onChange={(e) => setFormData(prev => ({ ...prev, sopStatus: e.target.value }))}
+                      onChange={(e) => updateFormData('sopStatus', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
@@ -1092,7 +1098,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">LOR Status</label>
                     <select
                       value={formData.lorStatus}
-                      onChange={(e) => setFormData(prev => ({ ...prev, lorStatus: e.target.value }))}
+                      onChange={(e) => updateFormData('lorStatus', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
@@ -1107,7 +1113,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Resume Status</label>
                     <select
                       value={formData.resumeStatus}
-                      onChange={(e) => setFormData(prev => ({ ...prev, resumeStatus: e.target.value }))}
+                      onChange={(e) => updateFormData('resumeStatus', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >

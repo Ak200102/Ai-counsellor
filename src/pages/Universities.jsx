@@ -347,16 +347,14 @@ function Universities() {
   };
 
   // Filter and sort universities
+  console.log('=== ALL UNIVERSITY NAMES ===');
+  universities.forEach((uni, index) => {
+    if (index < 10) console.log(`${index + 1}. ${uni.name}`);
+  });
+  console.log('Total universities:', universities.length);
+  console.log('============================');
+
   const filteredUniversities = universities.filter(university => {
-    console.log('=== UNIVERSITY DEBUG ===');
-    console.log('University name:', university.name);
-    console.log('University category:', university.category);
-    console.log('University universityType:', university.universityType);
-    console.log('University competitiveness:', university.competitiveness);
-    console.log('University location:', university.location);
-    console.log('University country:', university.country);
-    console.log('University program:', university.program);
-    
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (university.program && university.program.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (university.location && university.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -367,12 +365,17 @@ function Universities() {
       university.universityType === categoryFilter ||
       university.competitiveness === categoryFilter;
 
-    console.log('Search term:', searchTerm);
-    console.log('Category filter:', categoryFilter);
-    console.log('Matches search:', matchesSearch);
-    console.log('Matches category:', matchesCategory);
-    console.log('Will include:', matchesSearch && matchesCategory);
-    console.log('========================');
+    // Only show debug for first 5 universities when searching
+    if (searchTerm && universities.indexOf(university) < 5) {
+      console.log('=== UNIVERSITY DEBUG ===');
+      console.log('University name:', university.name);
+      console.log('Search term:', searchTerm);
+      console.log('Name includes search term:', university.name.toLowerCase().includes(searchTerm.toLowerCase()));
+      console.log('Matches search:', matchesSearch);
+      console.log('Matches category:', matchesCategory);
+      console.log('Will include:', matchesSearch && matchesCategory);
+      console.log('========================');
+    }
 
     return matchesSearch && matchesCategory;
   });

@@ -80,7 +80,7 @@ export default function ForgotPassword() {
             Forgot Password?
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            No worries, we'll send you reset instructions
+            No worries, we'll  reset your password
           </p>
         </motion.div>
 
@@ -147,7 +147,7 @@ export default function ForgotPassword() {
                     Sending...
                   </span>
                 ) : (
-                  "Send Reset Instructions"
+                  "Send Reset OTP"
                 )}
               </motion.button>
             </form>

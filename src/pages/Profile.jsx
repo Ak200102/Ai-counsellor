@@ -67,42 +67,38 @@ export default function Profile() {
         name: userData.name || "",
         email: userData.email || "",
         bio: profile?.bio || "",
-        targetCountry: profile?.studyGoal?.countries?.[0] || "",
-        studyLevel: profile?.academic?.level || "",
-        budget: profile?.budget?.range || "",
-        major: profile?.academic?.major || "",
-        fieldOfStudy: profile?.academic?.fieldOfStudy || "",
-        gpa: profile?.academic?.gpa || "",
-        degree: profile?.studyGoal?.degree || "",
-        field: profile?.studyGoal?.field || "",
-        intendedMajor: profile?.studyGoal?.intendedMajor || "",
-        // Career Goals
-        shortTermGoals: profile?.careerGoals?.shortTerm || "",
-        longTermGoals: profile?.careerGoals?.longTerm || "",
-        careerAspirations: profile?.careerGoals?.aspirations || "",
-        industryInterest: profile?.careerGoals?.industry || "",
-        sectorInterest: profile?.careerGoals?.sector || "",
-        jobRoleAspirations: profile?.careerGoals?.jobRole || "",
-        positionAspirations: profile?.careerGoals?.position || "",
-        // Experience
-        workExperienceYears: profile?.experience?.years || "",
-        workExperienceDuration: profile?.experience?.duration || "",
-        company: profile?.experience?.company || "",
-        position: profile?.experience?.position || "",
-        // Skills
-        technicalSkills: profile?.skills?.technical?.join(', ') || "",
-        allSkills: profile?.skills?.all?.join(', ') || "",
-        // Exams
-        ieltsScore: profile?.exams?.ielts?.score || "",
-        greScore: profile?.exams?.gre?.score || "",
-        toeflScore: profile?.exams?.toefl?.score || "",
-        satScore: profile?.exams?.sat?.score || "",
-        // Budget Details
-        annualBudget: profile?.budget?.annual || "",
-        totalBudget: profile?.budget?.total || "",
-        // Additional Countries
-        preferredCountries: profile?.studyGoal?.preferredCountries?.join(', ') || "",
-        allCountries: profile?.studyGoal?.countries?.join(', ') || ""
+        // Academic Background (matching onboarding structure)
+        degree: profile?.degree || "",
+        subject: profile?.subject || "",
+        university: profile?.university || "",
+        graduationYear: profile?.graduationYear || "",
+        gpa: profile?.gpa || "",
+        // Study Goal (matching onboarding structure)
+        intendedDegree: profile?.intendedDegree || "",
+        fieldOfStudy: profile?.fieldOfStudy || "",
+        intakeYear: profile?.intakeYear || "",
+        preferredCountries: profile?.preferredCountries?.join(', ') || "",
+        // Budget (matching onboarding structure)
+        budgetRange: profile?.budgetRange || "",
+        fundingPlan: profile?.fundingPlan || "",
+        // Standardized Tests (matching onboarding structure)
+        ieltsTaken: profile?.ieltsTaken || false,
+        ieltsScore: profile?.ieltsScore?.overall || "",
+        toeflTaken: profile?.toeflTaken || false,
+        toeflScore: profile?.toeflScore?.total || "",
+        greTaken: profile?.greTaken || false,
+        greScore: profile?.greScore?.total || "",
+        gmatTaken: profile?.gmatTaken || false,
+        gmatScore: profile?.gmatScore?.total || "",
+        // Additional Academic Info (matching onboarding structure)
+        workExperience: profile?.workExperience || "",
+        researchExperience: profile?.researchExperience || "",
+        publications: profile?.publications || "",
+        certifications: profile?.certifications || "",
+        // Application Readiness (matching onboarding structure)
+        sopStatus: profile?.sopStatus || "",
+        lorStatus: profile?.lorStatus || "",
+        resumeStatus: profile?.resumeStatus || ""
       });
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -264,42 +260,38 @@ export default function Profile() {
       name: user?.name || "",
       email: user?.email || "",
       bio: profile?.bio || "",
-      targetCountry: profile?.studyGoal?.countries?.[0] || "",
-      studyLevel: profile?.academic?.level || "",
-      budget: profile?.budget?.range || "",
-      major: profile?.academic?.major || "",
-      fieldOfStudy: profile?.academic?.fieldOfStudy || "",
-      gpa: profile?.academic?.gpa || "",
-      degree: profile?.studyGoal?.degree || "",
-      field: profile?.studyGoal?.field || "",
-      intendedMajor: profile?.studyGoal?.intendedMajor || "",
-      // Career Goals
-      shortTermGoals: profile?.careerGoals?.shortTerm || "",
-      longTermGoals: profile?.careerGoals?.longTerm || "",
-      careerAspirations: profile?.careerGoals?.aspirations || "",
-      industryInterest: profile?.careerGoals?.industry || "",
-      sectorInterest: profile?.careerGoals?.sector || "",
-      jobRoleAspirations: profile?.careerGoals?.jobRole || "",
-      positionAspirations: profile?.careerGoals?.position || "",
-      // Experience
-      workExperienceYears: profile?.experience?.years || "",
-      workExperienceDuration: profile?.experience?.duration || "",
-      company: profile?.experience?.company || "",
-      position: profile?.experience?.position || "",
-      // Skills
-      technicalSkills: profile?.skills?.technical?.join(', ') || "",
-      allSkills: profile?.skills?.all?.join(', ') || "",
-      // Exams
-      ieltsScore: profile?.exams?.ielts?.score || "",
-      greScore: profile?.exams?.gre?.score || "",
-      toeflScore: profile?.exams?.toefl?.score || "",
-      satScore: profile?.exams?.sat?.score || "",
-      // Budget Details
-      annualBudget: profile?.budget?.annual || "",
-      totalBudget: profile?.budget?.total || "",
-      // Additional Countries
-      preferredCountries: profile?.studyGoal?.preferredCountries?.join(', ') || "",
-      allCountries: profile?.studyGoal?.countries?.join(', ') || ""
+      // Academic Background (matching onboarding structure)
+      degree: profile?.degree || "",
+      subject: profile?.subject || "",
+      university: profile?.university || "",
+      graduationYear: profile?.graduationYear || "",
+      gpa: profile?.gpa || "",
+      // Study Goal (matching onboarding structure)
+      intendedDegree: profile?.intendedDegree || "",
+      fieldOfStudy: profile?.fieldOfStudy || "",
+      intakeYear: profile?.intakeYear || "",
+      preferredCountries: profile?.preferredCountries?.join(', ') || "",
+      // Budget (matching onboarding structure)
+      budgetRange: profile?.budgetRange || "",
+      fundingPlan: profile?.fundingPlan || "",
+      // Standardized Tests (matching onboarding structure)
+      ieltsTaken: profile?.ieltsTaken || false,
+      ieltsScore: profile?.ieltsScore?.overall || "",
+      toeflTaken: profile?.toeflTaken || false,
+      toeflScore: profile?.toeflScore?.total || "",
+      greTaken: profile?.greTaken || false,
+      greScore: profile?.greScore?.total || "",
+      gmatTaken: profile?.gmatTaken || false,
+      gmatScore: profile?.gmatScore?.total || "",
+      // Additional Academic Info (matching onboarding structure)
+      workExperience: profile?.workExperience || "",
+      researchExperience: profile?.researchExperience || "",
+      publications: profile?.publications || "",
+      certifications: profile?.certifications || "",
+      // Application Readiness (matching onboarding structure)
+      sopStatus: profile?.sopStatus || "",
+      lorStatus: profile?.lorStatus || "",
+      resumeStatus: profile?.resumeStatus || ""
     });
     setEditing(false);
   };

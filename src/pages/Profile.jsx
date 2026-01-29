@@ -119,26 +119,26 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Convert flat formData to nested structure for backend
+      // Convert flat formData to nested structure for backend - INCLUDE ALL FIELDS
       const nestedFormData = {
         name: formData.name,
         email: formData.email,
         bio: formData.bio,
-        // Academic Background - NESTED STRUCTURE
+        // Academic Background - ALL FIELDS
         degree: formData.degree,
         subject: formData.subject,
         university: formData.university,
         graduationYear: formData.graduationYear,
         gpa: formData.gpa,
-        // Study Goal - NESTED STRUCTURE
+        // Study Goal - ALL FIELDS
         intendedDegree: formData.intendedDegree,
         fieldOfStudy: formData.fieldOfStudy,
         intakeYear: formData.intakeYear,
         preferredCountries: formData.preferredCountries,
-        // Budget - NESTED STRUCTURE
+        // Budget - ALL FIELDS
         budgetRange: formData.budgetRange,
         fundingPlan: formData.fundingPlan,
-        // Standardized Tests
+        // Standardized Tests - ALL FIELDS
         ieltsTaken: formData.ieltsTaken,
         ieltsScore: formData.ieltsScore,
         toeflTaken: formData.toeflTaken,
@@ -147,12 +147,12 @@ export default function Profile() {
         greScore: formData.greScore,
         gmatTaken: formData.gmatTaken,
         gmatScore: formData.gmatScore,
-        // Additional Academic Info
+        // Additional Academic Info - ALL FIELDS
         workExperience: formData.workExperience,
         researchExperience: formData.researchExperience,
         publications: formData.publications,
         certifications: formData.certifications,
-        // Application Readiness
+        // Application Readiness - ALL FIELDS
         sopStatus: formData.sopStatus,
         lorStatus: formData.lorStatus,
         resumeStatus: formData.resumeStatus

@@ -158,12 +158,20 @@ export default function Profile() {
         resumeStatus: formData.resumeStatus
       };
       
+      console.log('=== SAVE DEBUG ===');
+      console.log('Sending to backend:', nestedFormData);
+      
       const response = await updateUser(nestedFormData);
+      
+      console.log('Backend response:', response);
+      console.log('Save completed successfully');
       
       setUser(prev => ({ ...prev, ...nestedFormData }));
       setEditing(false);
     } catch (error) {
+      console.error("=== SAVE ERROR ===");
       console.error("Failed to update profile:", error);
+      console.error("Error response:", error.response?.data);
     } finally {
       setSaving(false);
     }

@@ -63,6 +63,14 @@ export default function Profile() {
       // Extract profile data with fallbacks
       const profile = userData.profile || {};
       
+      // Simple check to see if onboarding data exists
+      console.log('=== PROFILE LOADING CHECK ===');
+      console.log('Has profile:', !!profile);
+      console.log('Degree from DB:', profile?.degree);
+      console.log('Subject from DB:', profile?.subject);
+      console.log('IntendedDegree from DB:', profile?.intendedDegree);
+      console.log('FieldOfStudy from DB:', profile?.fieldOfStudy);
+      
       setFormData({
         name: userData.name || "",
         email: userData.email || "",
@@ -100,6 +108,13 @@ export default function Profile() {
         lorStatus: profile?.lorStatus || "",
         resumeStatus: profile?.resumeStatus || ""
       });
+      
+      // Log what was actually set in formData
+      console.log('=== FORM DATA SET ===');
+      console.log('FormData degree:', formData.degree);
+      console.log('FormData subject:', formData.subject);
+      console.log('FormData intendedDegree:', formData.intendedDegree);
+      console.log('FormData fieldOfStudy:', formData.fieldOfStudy);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
     } finally {

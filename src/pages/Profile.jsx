@@ -77,38 +77,38 @@ export default function Profile() {
         name: userData.name || "",
         email: userData.email || "",
         bio: profile?.bio || "",
-        // Academic Background - EXACT MATCH WITH ONBOARDING
-        degree: profile?.degree || "",
-        subject: profile?.subject || "",
-        university: profile?.university || "",
-        graduationYear: profile?.graduationYear || "",
-        gpa: profile?.gpa || "",
-        // Study Goal - EXACT MATCH WITH ONBOARDING
-        intendedDegree: profile?.intendedDegree || "",
-        fieldOfStudy: profile?.fieldOfStudy || "",
-        intakeYear: profile?.intakeYear || "",
-        preferredCountries: profile?.preferredCountries || [],
-        // Budget - EXACT MATCH WITH ONBOARDING
-        budgetRange: profile?.budgetRange || "",
-        fundingPlan: profile?.fundingPlan || "",
-        // Standardized Tests - EXACT MATCH WITH ONBOARDING
-        ieltsTaken: profile?.ieltsTaken || false,
-        ieltsScore: profile?.ieltsScore?.overall || "",
-        toeflTaken: profile?.toeflTaken || false,
-        toeflScore: profile?.toeflScore?.total || "",
-        greTaken: profile?.greTaken || false,
-        greScore: profile?.greScore?.total || "",
-        gmatTaken: profile?.gmatTaken || false,
-        gmatScore: profile?.gmatScore?.total || "",
-        // Additional Academic Info - EXACT MATCH WITH ONBOARDING
-        workExperience: profile?.workExperience || "",
-        researchExperience: profile?.researchExperience || "",
-        publications: profile?.publications || "",
-        certifications: profile?.certifications || "",
-        // Application Readiness - EXACT MATCH WITH ONBOARDING
-        sopStatus: profile?.sopStatus || "",
-        lorStatus: profile?.lorStatus || "",
-        resumeStatus: profile?.resumeStatus || ""
+        // Academic Background - NESTED STRUCTURE
+        degree: profile?.academic?.degree || "",
+        subject: profile?.academic?.subject || "",
+        university: profile?.academic?.university || "",
+        graduationYear: profile?.academic?.graduationYear || "",
+        gpa: profile?.academic?.gpa || "",
+        // Study Goal - NESTED STRUCTURE
+        intendedDegree: profile?.studyGoal?.intendedDegree || "",
+        fieldOfStudy: profile?.studyGoal?.fieldOfStudy || "",
+        intakeYear: profile?.studyGoal?.intakeYear || "",
+        preferredCountries: profile?.studyGoal?.preferredCountries || [],
+        // Budget - NESTED STRUCTURE
+        budgetRange: profile?.budget?.range || "",
+        fundingPlan: profile?.budget?.funding || "",
+        // Standardized Tests - CHECK IF NESTED OR DIRECT
+        ieltsTaken: profile?.ieltsTaken || profile?.exams?.ielts?.taken || false,
+        ieltsScore: profile?.ieltsScore?.overall || profile?.exams?.ielts?.score || "",
+        toeflTaken: profile?.toeflTaken || profile?.exams?.toefl?.taken || false,
+        toeflScore: profile?.toeflScore?.total || profile?.exams?.toefl?.score || "",
+        greTaken: profile?.greTaken || profile?.exams?.gre?.taken || false,
+        greScore: profile?.greScore?.total || profile?.exams?.gre?.score || "",
+        gmatTaken: profile?.gmatTaken || profile?.exams?.gmat?.taken || false,
+        gmatScore: profile?.gmatScore?.total || profile?.exams?.gmat?.score || "",
+        // Additional Academic Info - CHECK IF NESTED OR DIRECT
+        workExperience: profile?.workExperience || profile?.experience?.description || "",
+        researchExperience: profile?.researchExperience || profile?.experience?.research || "",
+        publications: profile?.publications || profile?.experience?.publications || "",
+        certifications: profile?.certifications || profile?.experience?.certifications || "",
+        // Application Readiness - CHECK IF NESTED OR DIRECT
+        sopStatus: profile?.sopStatus || profile?.application?.sop || "",
+        lorStatus: profile?.lorStatus || profile?.application?.lor || "",
+        resumeStatus: profile?.resumeStatus || profile?.application?.resume || ""
       });
       
       // Log what was actually set in formData
@@ -277,38 +277,38 @@ export default function Profile() {
       name: user?.name || "",
       email: user?.email || "",
       bio: profile?.bio || "",
-      // Academic Background - EXACT MATCH WITH ONBOARDING
-      degree: profile?.degree || "",
-      subject: profile?.subject || "",
-      university: profile?.university || "",
-      graduationYear: profile?.graduationYear || "",
-      gpa: profile?.gpa || "",
-      // Study Goal - EXACT MATCH WITH ONBOARDING
-      intendedDegree: profile?.intendedDegree || "",
-      fieldOfStudy: profile?.fieldOfStudy || "",
-      intakeYear: profile?.intakeYear || "",
-      preferredCountries: profile?.preferredCountries || [],
-      // Budget - EXACT MATCH WITH ONBOARDING
-      budgetRange: profile?.budgetRange || "",
-      fundingPlan: profile?.fundingPlan || "",
-      // Standardized Tests - EXACT MATCH WITH ONBOARDING
-      ieltsTaken: profile?.ieltsTaken || false,
-      ieltsScore: profile?.ieltsScore?.overall || "",
-      toeflTaken: profile?.toeflTaken || false,
-      toeflScore: profile?.toeflScore?.total || "",
-      greTaken: profile?.greTaken || false,
-      greScore: profile?.greScore?.total || "",
-      gmatTaken: profile?.gmatTaken || false,
-      gmatScore: profile?.gmatScore?.total || "",
-      // Additional Academic Info - EXACT MATCH WITH ONBOARDING
-      workExperience: profile?.workExperience || "",
-      researchExperience: profile?.researchExperience || "",
-      publications: profile?.publications || "",
-      certifications: profile?.certifications || "",
-      // Application Readiness - EXACT MATCH WITH ONBOARDING
-      sopStatus: profile?.sopStatus || "",
-      lorStatus: profile?.lorStatus || "",
-      resumeStatus: profile?.resumeStatus || ""
+      // Academic Background - NESTED STRUCTURE
+      degree: profile?.academic?.degree || "",
+      subject: profile?.academic?.subject || "",
+      university: profile?.academic?.university || "",
+      graduationYear: profile?.academic?.graduationYear || "",
+      gpa: profile?.academic?.gpa || "",
+      // Study Goal - NESTED STRUCTURE
+      intendedDegree: profile?.studyGoal?.intendedDegree || "",
+      fieldOfStudy: profile?.studyGoal?.fieldOfStudy || "",
+      intakeYear: profile?.studyGoal?.intakeYear || "",
+      preferredCountries: profile?.studyGoal?.preferredCountries || [],
+      // Budget - NESTED STRUCTURE
+      budgetRange: profile?.budget?.range || "",
+      fundingPlan: profile?.budget?.funding || "",
+      // Standardized Tests - CHECK IF NESTED OR DIRECT
+      ieltsTaken: profile?.ieltsTaken || profile?.exams?.ielts?.taken || false,
+      ieltsScore: profile?.ieltsScore?.overall || profile?.exams?.ielts?.score || "",
+      toeflTaken: profile?.toeflTaken || profile?.exams?.toefl?.taken || false,
+      toeflScore: profile?.toeflScore?.total || profile?.exams?.toefl?.score || "",
+      greTaken: profile?.greTaken || profile?.exams?.gre?.taken || false,
+      greScore: profile?.greScore?.total || profile?.exams?.gre?.score || "",
+      gmatTaken: profile?.gmatTaken || profile?.exams?.gmat?.taken || false,
+      gmatScore: profile?.gmatScore?.total || profile?.exams?.gmat?.score || "",
+      // Additional Academic Info - CHECK IF NESTED OR DIRECT
+      workExperience: profile?.workExperience || profile?.experience?.description || "",
+      researchExperience: profile?.researchExperience || profile?.experience?.research || "",
+      publications: profile?.publications || profile?.experience?.publications || "",
+      certifications: profile?.certifications || profile?.experience?.certifications || "",
+      // Application Readiness - CHECK IF NESTED OR DIRECT
+      sopStatus: profile?.sopStatus || profile?.application?.sop || "",
+      lorStatus: profile?.lorStatus || profile?.application?.lor || "",
+      resumeStatus: profile?.resumeStatus || profile?.application?.resume || ""
     });
     setEditing(false);
   };

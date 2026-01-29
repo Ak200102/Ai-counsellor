@@ -18,11 +18,11 @@ api.interceptors.response.use(
   (error) => {
     // Handle 401 Unauthorized errors
     if (error.response?.status === 401 || error.response?.status === 403) {
-      console.log("Authentication error detected, clearing token");
+      console.log("Authentication error detected, clearing token and redirecting to landing");
       localStorage.removeItem("token");
       
-      // You could also redirect to login page here if needed
-      // window.location.href = "/auth/login";
+      // Redirect to landing page
+      window.location.href = "/";
     }
     return Promise.reject(error);
   }

@@ -19,6 +19,7 @@ import ApplicationGuidance from "./pages/ApplicationGuidance";
 import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import Layout from "./components/Layout";
+import ProtectedRoute from "./components/ProtectedRoute";
 import "./styles/3d-effects.css";
 
 export default function App() {
@@ -34,84 +35,116 @@ export default function App() {
         
         {/* Authenticated routes with navbar */}
         <Route path="/onboarding" element={
-          <Layout>
-            <Onboarding/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Onboarding/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/dashboard" element={
-          <Layout>
-            <DashboardEnhanced/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <DashboardEnhanced/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/dashboard-old" element={
-          <Layout>
-            <Dashboard/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Dashboard/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/profile" element={
-          <Layout>
-            <Profile/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Profile/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/counsellor" element={
-          <Layout>
-            <AICounsellor/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <AICounsellor/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/ai-counsellor" element={
-          <Layout>
-            <AICounsellor/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <AICounsellor/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/universities" element={
-          <Layout>
-            <Universities/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Universities/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/universities/:id" element={
-          <Layout>
-            <UniversityDetail/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <UniversityDetail/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/university/:id" element={
-          <Layout>
-            <UniversityDetails/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <UniversityDetails/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/compare" element={
-          <Layout>
-            <UniversityComparison/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <UniversityComparison/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/tasks" element={
-          <Layout>
-            <Tasks/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Tasks/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/application-guidance" element={
-          <Layout>
-            <ApplicationGuidance/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <ApplicationGuidance/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/application" element={
-          <Layout>
-            <Application/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Application/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/applications" element={
-          <Layout>
-            <Application/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Application/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/analytics" element={
-          <Layout>
-            <Analytics/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Analytics/>
+            </Layout>
+          </ProtectedRoute>
         }/>
         <Route path="/settings" element={
-          <Layout>
-            <Settings/>
-          </Layout>
+          <ProtectedRoute>
+            <Layout>
+              <Settings/>
+            </Layout>
+          </ProtectedRoute>
         }/>
       </Routes>
     </div>

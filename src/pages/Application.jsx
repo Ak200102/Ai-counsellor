@@ -44,6 +44,37 @@ export default function Application() {
   });
   const [universities, setUniversities] = useState([]);
 
+  // Calculate real-time progress based on documents submitted
+  const calculateProgress = (application) => {
+    // Required documents for a complete application
+    const requiredDocuments = [
+      'transcript',
+      'resume',
+      'statement_of_purpose',
+      'recommendation_letters',
+      'test_scores'
+    ];
+    
+    if (!application.documents || application.documents.length === 0) {
+      return 0;
+    }
+    
+    // Count how many required document types have been submitted
+    const submittedTypes = application.documents.map(doc => doc.documentType);
+    const submittedRequiredCount = requiredDocuments.filter(type => 
+      submittedTypes.includes(type)
+    ).length;
+    
+    // Calculate percentage (each required document is worth 20%)
+    const progress = Math.min((submittedRequiredCount / requiredDocuments.length) * 100, 100);
+    
+    // Bonus progress for additional documents
+    const additionalDocs = application.documents.length - submittedRequiredCount;
+    const bonusProgress = Math.min(additionalDocs * 5, 20); // Max 20% bonus
+    
+    return Math.min(progress + bonusProgress, 100);
+  };
+
   const createApplicationForUniversity = async (universityData = null) => {
     try {
       const requestData = {
@@ -458,14 +489,17 @@ export default function Application() {
                     <div className="mb-4">
                       <div className="flex justify-between text-sm mb-2">
                         <span className="text-gray-400">Progress</span>
-                        <span className="text-white">{application.progress || 0}%</span>
+                        <span className="text-white">{Math.round(calculateProgress(application))}%</span>
                       </div>
                       <div className="w-full bg-white/10 rounded-full h-2">
                         <div 
-                          className="h-2 rounded-full bg-blue-500" 
-                          style={{ width: `${application.progress || 0}%` }} 
+                          className="h-2 rounded-full bg-blue-500 transition-all duration-300" 
+                          style={{ width: `${calculateProgress(application)}%` }} 
                         />
                       </div>
+                      <p className="text-xs text-gray-400 mt-1">
+                        {application.documents ? application.documents.length : 0} documents uploaded
+                      </p>
                     </div>
 
                     {/* Documents Count */}
@@ -889,18 +923,34 @@ export default function Application() {
                 </div>
 
                 {/* Progress */}
-                {selectedApplication.progress !== undefined && (
-                  <div className="bg-gray-50 rounded-xl p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Progress</h3>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
-                        className="h-3 rounded-full bg-blue-500 transition-all duration-300" 
-                        style={{ width: `${selectedApplication.progress}%` }} 
-                      />
-                    </div>
-                    <p className="text-sm text-gray-600 mt-2">{selectedApplication.progress}% Complete</p>
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Application Progress</h3>
+                  <div className="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                      className="h-3 rounded-full bg-blue-500 transition-all duration-300" 
+                      style={{ width: `${calculateProgress(selectedApplication)}%` }} 
+                    />
                   </div>
-                )}
+                  <p className="text-sm text-gray-600 mt-2">{Math.round(calculateProgress(selectedApplication))}% Complete</p>
+                  <div className="mt-4 space-y-2">
+                    <p className="text-xs text-gray-500">
+                      📄 {selectedApplication.documents ? selectedApplication.documents.length : 0} documents uploaded
+                    </p>
+                    <div className="text-xs text-gray-500">
+                      <div className="font-medium mb-1">Required Documents:</div>
+                      <div className="space-y-1">
+                        {['transcript', 'resume', 'statement_of_purpose', 'recommendation_letters', 'test_scores'].map(docType => {
+                          const isUploaded = selectedApplication.documents?.some(doc => doc.documentType === docType);
+                          return (
+                            <div key={docType} className={`flex items-center gap-1 ${isUploaded ? 'text-green-600' : 'text-gray-400'}`}>
+                              {isUploaded ? '✓' : '○'} {docType.replace('_', ' ').charAt(0).toUpperCase() + docType.replace('_', ' ').slice(1)}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
                 {/* Documents */}
                 {selectedApplication.documents && selectedApplication.documents.length > 0 && (

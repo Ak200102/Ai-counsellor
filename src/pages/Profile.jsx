@@ -683,12 +683,12 @@ export default function Profile() {
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="">Select degree</option>
-                      <option value="high-school">High School</option>
-                      <option value="bachelors">Bachelor's</option>
-                      <option value="masters">Master's</option>
-                      <option value="phd">PhD</option>
-                      <option value="other">Other</option>
+                      <option value="" className="text-gray-900">Select degree</option>
+                      <option value="high-school" className="text-gray-900">High School</option>
+                      <option value="bachelors" className="text-gray-900">Bachelor's</option>
+                      <option value="masters" className="text-gray-900">Master's</option>
+                      <option value="phd" className="text-gray-900">PhD</option>
+                      <option value="other" className="text-gray-900">Other</option>
                     </select>
                   </div>
                   
@@ -758,11 +758,11 @@ export default function Profile() {
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="">Select degree</option>
-                    <option value="bachelors">Bachelor's</option>
-                    <option value="masters">Master's</option>
-                    <option value="phd">PhD</option>
-                    <option value="diploma">Diploma</option>
+                    <option value="" className="text-gray-900">Select degree</option>
+                    <option value="bachelors" className="text-gray-900">Bachelor's</option>
+                    <option value="masters" className="text-gray-900">Master's</option>
+                    <option value="phd" className="text-gray-900">PhD</option>
+                    <option value="diploma" className="text-gray-900">Diploma</option>
                   </select>
                 </div>
 
@@ -786,10 +786,10 @@ export default function Profile() {
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="">Select year</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
+                    <option value="" className="text-gray-900">Select year</option>
+                    <option value="2024" className="text-gray-900">2024</option>
+                    <option value="2025" className="text-gray-900">2025</option>
+                    <option value="2026" className="text-gray-900">2026</option>
                   </select>
                 </div>
 
@@ -1040,10 +1040,10 @@ export default function Profile() {
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="">Select status</option>
-                      <option value="not-started">Not Started</option>
-                      <option value="in-progress">In Progress</option>
-                      <option value="completed">Completed</option>
+                      <option value="" className="text-gray-900">Select status</option>
+                      <option value="not-started" className="text-gray-900">Not Started</option>
+                      <option value="in-progress" className="text-gray-900">In Progress</option>
+                      <option value="completed" className="text-gray-900">Completed</option>
                     </select>
                   </div>
                   
@@ -1055,10 +1055,10 @@ export default function Profile() {
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="">Select status</option>
-                      <option value="not-started">Not Started</option>
-                      <option value="in-progress">In Progress</option>
-                      <option value="completed">Completed</option>
+                      <option value="" className="text-gray-900">Select status</option>
+                      <option value="not-started" className="text-gray-900">Not Started</option>
+                      <option value="in-progress" className="text-gray-900">In Progress</option>
+                      <option value="completed" className="text-gray-900">Completed</option>
                     </select>
                   </div>
                   
@@ -1070,10 +1070,10 @@ export default function Profile() {
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
-                      <option value="">Select status</option>
-                      <option value="not-started">Not Started</option>
-                      <option value="in-progress">In Progress</option>
-                      <option value="completed">Completed</option>
+                      <option value="" className="text-gray-900">Select status</option>
+                      <option value="not-started" className="text-gray-900">Not Started</option>
+                      <option value="in-progress" className="text-gray-900">In Progress</option>
+                      <option value="completed" className="text-gray-900">Completed</option>
                     </select>
                   </div>
                 </div>

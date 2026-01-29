@@ -349,20 +349,32 @@ function Universities() {
   // Filter and sort universities
   const filteredUniversities = universities.filter(university => {
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      university.program?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      university.location?.toLowerCase().includes(searchTerm.toLowerCase());
+      (university.program && university.program.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (university.location && university.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (university.country && university.country.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesCategory = categoryFilter === 'all' ||
       university.category === categoryFilter ||
+      university.universityType === categoryFilter ||
       university.competitiveness === categoryFilter;
 
     return matchesSearch && matchesCategory;
   });
 
   const sortedUniversities = [...filteredUniversities].sort((a, b) => {
-    if (sortBy === 'ranking') return (a.ranking || 999) - (b.ranking || 999);
-    if (sortBy === 'name') return a.name.localeCompare(b.name);
-    if (sortBy === 'tuition') return (a.tuitionFeePerYear || 0) - (b.tuitionFeePerYear || 0);
+    if (sortBy === 'ranking') {
+      const aRank = a.ranking || a.rank || 999;
+      const bRank = b.ranking || b.rank || 999;
+      return aRank - bRank;
+    }
+    if (sortBy === 'name') {
+      return a.name.localeCompare(b.name);
+    }
+    if (sortBy === 'tuition') {
+      const aTuition = a.tuitionFeePerYear || a.tuition || a.cost || 0;
+      const bTuition = b.tuitionFeePerYear || b.tuition || b.cost || 0;
+      return aTuition - bTuition;
+    }
     return 0;
   });
 
@@ -650,28 +662,38 @@ function Universities() {
                 />
               </div>
               <div className="flex gap-3">
-                <select
-                  value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
-                  className="px-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="all">All Categories</option>
-                  <option value="DREAM">Dream</option>
-                  <option value="TARGET">Target</option>
-                  <option value="SAFE">Safe</option>
-                  <option value="HIGH">High Competition</option>
-                  <option value="MEDIUM">Medium Competition</option>
-                  <option value="LOW">Low Competition</option>
-                </select>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="ranking">Sort by Ranking</option>
-                  <option value="name">Sort by Name</option>
-                  <option value="tuition">Sort by Tuition</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={categoryFilter}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
+                    className="appearance-none w-full px-4 py-4 pr-10 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 hover:border-white/30 cursor-pointer shadow-lg"
+                  >
+                    <option value="all" className="bg-gray-800 text-white">🎯 All Categories</option>
+                    <option value="DREAM" className="bg-gray-800 text-white">🔥 Dream Universities</option>
+                    <option value="TARGET" className="bg-gray-800 text-white">🎯 Target Universities</option>
+                    <option value="SAFE" className="bg-gray-800 text-white">✅ Safe Universities</option>
+                    <option value="HIGH" className="bg-gray-800 text-white">⚡ High Competition</option>
+                    <option value="MEDIUM" className="bg-gray-800 text-white">📊 Medium Competition</option>
+                    <option value="LOW" className="bg-gray-800 text-white">📈 Low Competition</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <AdjustmentsHorizontalIcon className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none w-full px-4 py-4 pr-10 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 hover:border-white/30 cursor-pointer shadow-lg"
+                  >
+                    <option value="ranking" className="bg-gray-800 text-white">🏆 Sort by Ranking</option>
+                    <option value="name" className="bg-gray-800 text-white">🔤 Sort by Name</option>
+                    <option value="tuition" className="bg-gray-800 text-white">💰 Sort by Tuition</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <ChartBarIcon className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

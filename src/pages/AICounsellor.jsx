@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { askCounsellor, getMe, getUniversities } from "../helpers/endpoints";
+import { askCounsellor, getMe, getUniversities, getConversationHistory } from "../helpers/endpoints";
 import { shortlistUniversity, unshortlistUniversity, lockUniversity } from "../helpers/endpoints";
 import { createTask } from "../helpers/endpoints";
 import { getUniversityIdByName } from "../utils/universityMapping.js";
@@ -20,7 +20,10 @@ import {
   Cog6ToothIcon,
   StarIcon,
   ClipboardDocumentListIcon,
-  LockClosedIcon
+  LockClosedIcon,
+  ClockIcon,
+  ArrowLeftIcon,
+  TrashIcon
 } from "@heroicons/react/24/outline";
 
 export default function AICounsellor() {
@@ -39,8 +42,26 @@ export default function AICounsellor() {
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
   const [universities, setUniversities] = useState([]);
+  const [showChatHistory, setShowChatHistory] = useState(false);
+  const [chatHistory, setChatHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
+
+  // Fetch conversation history
+  const fetchConversationHistory = async () => {
+    try {
+      setHistoryLoading(true);
+      const response = await getConversationHistory();
+      setChatHistory(response.data.messages || []);
+      console.log("Conversation history loaded:", response.data.messages?.length || 0, "messages");
+    } catch (error) {
+      console.error("Error fetching conversation history:", error);
+      setChatHistory([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
 
   // Find university by name
   const findUniversityByName = async (name) => {
@@ -703,6 +724,16 @@ export default function AICounsellor() {
             </div>
             <div className="flex items-center space-x-3">
               <button
+                onClick={() => {
+                  setShowChatHistory(true);
+                  fetchConversationHistory();
+                }}
+                className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                title="Chat History"
+              >
+                <ClockIcon className="w-5 h-5" />
+              </button>
+              <button
                 onClick={() => setShowVoiceSettings(true)}
                 className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
                 title="Voice Settings"
@@ -894,6 +925,114 @@ export default function AICounsellor() {
         speechPitch={speechPitch}
         setSpeechPitch={setSpeechPitch}
       />
+
+      {/* Chat History Modal */}
+      <AnimatePresence>
+        {showChatHistory && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowChatHistory(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl w-full max-w-4xl max-h-[80vh] overflow-hidden border border-slate-700"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 border-b border-slate-700">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <ClockIcon className="w-6 h-6 text-white" />
+                    <h2 className="text-xl font-bold text-white">Chat History</h2>
+                    <span className="text-blue-100 text-sm">
+                      {chatHistory.length} conversations
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowChatHistory(false)}
+                    className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                  >
+                    <ArrowLeftIcon className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Chat History Content */}
+              <div className="flex-1 overflow-y-auto p-6 max-h-[60vh]">
+                {historyLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="ml-3 text-gray-300">Loading chat history...</span>
+                  </div>
+                ) : chatHistory.length === 0 ? (
+                  <div className="text-center py-12">
+                    <ChatBubbleLeftRightIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-300 mb-2">No Chat History</h3>
+                    <p className="text-gray-500">Start a conversation with your AI counsellor to see your chat history here.</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {chatHistory.map((message, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div className={`max-w-[80%] ${message.role === 'user' ? 'order-2' : 'order-1'}`}>
+                          <div className={`p-4 rounded-2xl ${
+                            message.role === 'user'
+                              ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                              : 'bg-slate-700 text-gray-100 border border-slate-600'
+                          }`}>
+                            <div className="flex items-center space-x-2 mb-2">
+                              {message.role === 'user' ? (
+                                <UserCircleIcon className="w-4 h-4" />
+                              ) : (
+                                <SparklesIcon className="w-4 h-4" />
+                              )}
+                              <span className="text-xs font-medium opacity-75">
+                                {message.role === 'user' ? 'You' : 'AI Counsellor'}
+                              </span>
+                            </div>
+                            <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                              {message.content}
+                            </p>
+                            <div className="mt-2 text-xs opacity-60">
+                              {new Date(message.timestamp).toLocaleString()}
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="bg-slate-800 border-t border-slate-700 p-4">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-400">
+                    Showing your recent conversations with the AI counsellor
+                  </p>
+                  <button
+                    onClick={() => setShowChatHistory(false)}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

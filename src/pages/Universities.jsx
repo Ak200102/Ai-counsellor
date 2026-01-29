@@ -347,10 +347,6 @@ function Universities() {
   };
 
   // Filter and sort universities
-  console.log('=== CATEGORY FILTER DEBUG ===');
-  console.log('Current category filter:', categoryFilter);
-  console.log('Total universities before filter:', universities.length);
-  
   const filteredUniversities = universities.filter(university => {
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (university.program && university.program.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -362,20 +358,8 @@ function Universities() {
       university.universityType?.toLowerCase() === categoryFilter.toLowerCase() ||
       university.competitiveness?.toLowerCase() === categoryFilter.toLowerCase();
 
-    // Show debug for first few universities when category filter is not 'all'
-    if (categoryFilter !== 'all' && universities.indexOf(university) < 5) {
-      console.log('University:', university.name);
-      console.log('  - category:', university.category);
-      console.log('  - universityType:', university.universityType);
-      console.log('  - competitiveness:', university.competitiveness);
-      console.log('  - matchesCategory:', matchesCategory);
-    }
-
     return matchesSearch && matchesCategory;
   });
-  
-  console.log('Universities after filter:', filteredUniversities.length);
-  console.log('============================');
 
   const sortedUniversities = [...filteredUniversities].sort((a, b) => {
     if (sortBy === 'ranking') {

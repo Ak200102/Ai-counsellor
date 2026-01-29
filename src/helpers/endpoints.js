@@ -30,6 +30,7 @@ export const checkAiCounsellingStatus = () => api.get("/api/user/ai-counselling-
 
 // ai
 export const askCounsellor = (message) => api.post("/api/counsellor", { message });
+export const getConversationHistory = () => api.get("/api/counsellor/history");
 
 // universities
 export const getUniversities = () => api.get("/api/universities");

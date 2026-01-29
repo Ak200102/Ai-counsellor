@@ -52,7 +52,7 @@ function Universities() {
   useEffect(() => {
     fetchUserData();
     fetchUniversities();
-    
+
     // Check if lock action happened in AI Counsellor
     const lastLockTime = sessionStorage.getItem('lastUniversityLock');
     if (lastLockTime) {
@@ -60,20 +60,20 @@ function Universities() {
       fetchUniversities();
       sessionStorage.removeItem('lastUniversityLock');
     }
-    
+
     // Listen for events from AI Counsellor using event bus
     const handleUniversityUpdate = (data) => {
       console.log('University update event received via eventBus:', data);
       console.log('Refreshing universities data...');
       fetchUniversities();
     };
-    
+
     // Refresh data when page gets focus (user returns from AI Counsellor)
     const handleFocus = () => {
       console.log('Page focused, refreshing universities data...');
       fetchUniversities();
     };
-    
+
     // Check if user navigated from AI Counsellor
     const navigationEntries = performance.getEntriesByType('navigation');
     const lastNavigation = navigationEntries[navigationEntries.length - 1];
@@ -81,10 +81,10 @@ function Universities() {
       console.log('Page navigation detected, refreshing data...');
       fetchUniversities();
     }
-    
+
     eventBus.on('universityUpdate', handleUniversityUpdate);
     window.addEventListener('focus', handleFocus);
-    
+
     return () => {
       eventBus.off('universityUpdate', handleUniversityUpdate);
       window.removeEventListener('focus', handleFocus);
@@ -96,22 +96,22 @@ function Universities() {
       // Fetch user data from database
       const userResponse = await getMe();
       const userData = userResponse.data || userResponse;
-      
+
       if (userData) {
         setUser(userData);
-        
+
         // Check if user has completed onboarding (this should come from user profile in database)
         const isOnboardingComplete = userData.onboardingCompleted || false;
         const userStage = userData.stage || 'ONBOARDING';
-        
+
         setOnboardingComplete(isOnboardingComplete);
         setCurrentStage(userStage);
-        
+
         // Fetch AI recommendations if user has profile data
         if (userData.profile) {
           fetchAIRecommendations();
         }
-        
+
         if (!isOnboardingComplete) {
           // Redirect to onboarding if not completed
           navigate("/onboarding");
@@ -132,7 +132,7 @@ function Universities() {
   const fetchAIRecommendations = async () => {
     try {
       setLoadingRecommendations(true);
-      
+
       // Build profile context for AI
       const profile = user?.profile || {};
       const profileMessage = `
@@ -149,10 +149,10 @@ function Universities() {
         
         Based on this profile, what universities do you recommend for me? Please provide specific university names with categories (Dream, Target, Safe) and acceptance chances.
       `;
-      
+
       const response = await askCounsellor(profileMessage);
       console.log("AI Recommendations Response:", response.data);
-      
+
       setAiRecommendations(response.data);
       setLoadingRecommendations(false);
     } catch (error) {
@@ -165,16 +165,16 @@ function Universities() {
     try {
       const response = await getUniversities();
       const responseData = response.data;
-      
+
       // Handle different response structures from database
       let universityData = [];
-      
+
       if (responseData.universities) {
         universityData = responseData.universities;
       } else if (Array.isArray(responseData)) {
         universityData = responseData;
       }
-      
+
       // Process universities from database - use real data structure
       const universitiesWithCategories = universityData.map(uni => ({
         ...uni,
@@ -209,7 +209,7 @@ function Universities() {
         whyItFits: uni.whyItFits || null,
         risks: uni.risks || null
       }));
-      
+
       setUniversities(universitiesWithCategories);
       setLoading(false);
     } catch (error) {
@@ -222,12 +222,12 @@ function Universities() {
   const handleShortlist = async (universityId) => {
     try {
       const university = universities.find(u => u._id === universityId);
-      
+
       if (university.shortlisted) {
         // Remove from shortlist
         await unshortlistUniversity(universityId);
-        setUniversities(prev => prev.map(uni => 
-          uni._id === universityId 
+        setUniversities(prev => prev.map(uni =>
+          uni._id === universityId
             ? { ...uni, shortlisted: false }
             : uni
         ));
@@ -235,17 +235,17 @@ function Universities() {
       } else {
         // Call API to shortlist university in MongoDB
         await shortlistUniversity(universityId);
-        
+
         // Update local state to reflect change immediately
-        setUniversities(prev => prev.map(uni => 
-          uni._id === universityId 
+        setUniversities(prev => prev.map(uni =>
+          uni._id === universityId
             ? { ...uni, shortlisted: true }
             : uni
         ));
         console.log(`✅ ${university.name} shortlisted in MongoDB!`);
-        
+
       }
-      
+
     } catch (error) {
       console.error("Failed to shortlist university:", error);
       setMessage("Failed to shortlist university in database. Please try again.");
@@ -258,14 +258,14 @@ function Universities() {
     try {
       // Check if user already has a locked university
       const alreadyLockedUniversity = universities.find(u => u.locked && u._id !== universityId);
-      
+
       if (alreadyLockedUniversity) {
         setMessage(`You already have ${alreadyLockedUniversity.name} locked. Unlock it first to lock another university.`);
         setMessageType("error");
         setTimeout(() => setMessage(""), 5000);
         return;
       }
-      
+
       // Check if university is shortlisted
       const targetUniversity = universities.find(u => u._id === universityId);
       if (!targetUniversity.shortlisted) {
@@ -274,7 +274,7 @@ function Universities() {
         setTimeout(() => setMessage(""), 5000);
         return;
       }
-      
+
       // Call API to lock/unlock university in MongoDB
       if (targetUniversity.locked) {
         // Unlock the university
@@ -289,14 +289,14 @@ function Universities() {
         // Update user stage if needed
         setCurrentStage("PREPARING_APPLICATIONS");
       }
-      
+
       // Update local state to reflect change immediately
-      setUniversities(prev => prev.map(uni => 
-        uni._id === universityId 
+      setUniversities(prev => prev.map(uni =>
+        uni._id === universityId
           ? { ...uni, locked: !uni.locked }
           : uni
       ));
-      
+
       const university = universities.find(u => u._id === universityId);
       if (targetUniversity.locked) {
         setMessage(`Unlocked ${targetUniversity.name}. You can now explore other options.`);
@@ -305,16 +305,16 @@ function Universities() {
       }
       setMessageType("success");
       setTimeout(() => setMessage(""), 3000);
-      
+
     } catch (error) {
       console.error("Failed to lock university:", error);
-      
+
       // Show specific error message from backend if available
       let errorMessage = "Failed to lock university in database. Please try again.";
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       }
-      
+
       setMessage(errorMessage);
       setMessageType("error");
       setTimeout(() => setMessage(""), 5000);
@@ -341,13 +341,13 @@ function Universities() {
   // Filter and sort universities
   const filteredUniversities = universities.filter(university => {
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         university.program?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         university.location?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = categoryFilter === 'all' || 
-                           university.category === categoryFilter ||
-                           university.competitiveness === categoryFilter;
-    
+      university.program?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      university.location?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory = categoryFilter === 'all' ||
+      university.category === categoryFilter ||
+      university.competitiveness === categoryFilter;
+
     return matchesSearch && matchesCategory;
   });
 
@@ -394,16 +394,15 @@ function Universities() {
       {/* Message Display */}
       {message && (
         <div className="fixed top-4 right-4 z-50 max-w-sm">
-          <div className={`p-4 rounded-lg border ${
-            messageType === 'success' 
-              ? 'bg-green-500/20 border-green-500 text-green-300' 
+          <div className={`p-4 rounded-lg border ${messageType === 'success'
+              ? 'bg-green-500/20 border-green-500 text-green-300'
               : 'bg-red-500/20 border-red-500 text-red-300'
-          }`}>
+            }`}>
             <p className="text-sm font-medium">{message}</p>
           </div>
         </div>
       )}
-      
+
       {/* AI Counsellor Header */}
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -435,7 +434,7 @@ function Universities() {
                 Compare Universities
               </button>
             </div>
-            
+
             {/* Progress Stages */}
             <div className="flex items-center justify-between bg-white/10 backdrop-blur-lg rounded-xl p-4">
               {[
@@ -446,19 +445,17 @@ function Universities() {
                 { stage: 'application', label: 'Application', completed: false }
               ].map((step, index) => (
                 <div key={step.stage} className="flex items-center flex-1">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    step.completed 
-                      ? "bg-green-500 text-white" 
-                      : currentStage === step.stage 
-                      ? "bg-indigo-600 text-white" 
-                      : "bg-gray-600 text-gray-300"
-                  }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step.completed
+                      ? "bg-green-500 text-white"
+                      : currentStage === step.stage
+                        ? "bg-indigo-600 text-white"
+                        : "bg-gray-600 text-gray-300"
+                    }`}>
                     {step.completed ? "✓" : index + 1}
                   </div>
                   {index < 4 && (
-                    <div className={`flex-1 h-1 mx-2 ${
-                      step.completed ? "bg-green-500" : "bg-gray-600"
-                    }`} />
+                    <div className={`flex-1 h-1 mx-2 ${step.completed ? "bg-green-500" : "bg-gray-600"
+                      }`} />
                   )}
                 </div>
               ))}
@@ -476,8 +473,8 @@ function Universities() {
                 <div>
                   <h2 className="text-2xl font-bold text-white mb-2">AI Recommendations for You</h2>
                   <p className="text-indigo-100">
-                    Based on your profile: {user.profile?.academic?.major || user.profile?.studyGoal?.field || 'Not specified'}, 
-                    GPA: {user.profile?.academic?.gpa || 'Not specified'}, 
+                    Based on your profile: {user.profile?.academic?.major || user.profile?.studyGoal?.field || 'Not specified'},
+                    GPA: {user.profile?.academic?.gpa || 'Not specified'},
                     Budget: {user.profile?.budget?.range || 'Not specified'}
                   </p>
                 </div>
@@ -497,7 +494,7 @@ function Universities() {
                       const dreamUnis = aiRecommendations.collegeRecommendations.filter(u => u.category === 'DREAM');
                       const targetUnis = aiRecommendations.collegeRecommendations.filter(u => u.category === 'TARGET');
                       const safeUnis = aiRecommendations.collegeRecommendations.filter(u => u.category === 'SAFE');
-                      
+
                       return (
                         <>
                           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
@@ -549,14 +546,14 @@ function Universities() {
                       );
                     })()}
                   </div>
-                  
+
                   {/* Acceptance Chances */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {(() => {
                       const highAccept = aiRecommendations.collegeRecommendations.filter(u => u.acceptanceProbability === 'High');
                       const mediumAccept = aiRecommendations.collegeRecommendations.filter(u => u.acceptanceProbability === 'Medium');
                       const lowAccept = aiRecommendations.collegeRecommendations.filter(u => u.acceptanceProbability === 'Low');
-                      
+
                       return (
                         <>
                           <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4">
@@ -657,7 +654,7 @@ function Universities() {
                   className="group"
                 >
                   {/* University Card */}
-                  <div 
+                  <div
                     className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-200 dark:border-gray-700 hover:border-indigo-300 dark:hover:border-indigo-600 group"
                     onClick={() => navigate(`/university/${university._id}`)}
                   >
@@ -668,16 +665,15 @@ function Universities() {
                         <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                           <AcademicCapIcon className="w-8 h-8 text-white" />
                         </div>
-                        
+
                         {/* Status Badges */}
                         <div className="flex gap-2">
                           {university.category && (
-                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              university.category === 'DREAM' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
-                              university.category === 'TARGET' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                              university.category === 'SAFE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
-                              'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'
-                            }`}>
+                            <div className={`px-3 py-1 rounded-full text-xs font-medium ${university.category === 'DREAM' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
+                                university.category === 'TARGET' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                  university.category === 'SAFE' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' :
+                                    'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400'
+                              }`}>
                               {university.category}
                             </div>
                           )}
@@ -693,7 +689,7 @@ function Universities() {
                           )}
                         </div>
                       </div>
-                      
+
                       {/* University Name and Location */}
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                         {university.name}
@@ -714,7 +710,7 @@ function Universities() {
                         </div>
                         <div className="text-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                           <p className="text-xl font-bold text-gray-900 dark:text-white">
-                            ${typeof university.tuitionFeePerYear === 'number' 
+                            ${typeof university.tuitionFeePerYear === 'number'
                               ? (university.tuitionFeePerYear / 1000).toFixed(0) + 'k'
                               : 'N/A'}
                           </p>
@@ -743,9 +739,9 @@ function Universities() {
                                 <span className="text-xs font-medium text-indigo-600 dark:text-indigo-400">{university.fitScore}/100</span>
                               </div>
                               <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5">
-                                <div 
-                                  className="h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500" 
-                                  style={{ width: `${university.fitScore}%` }} 
+                                <div
+                                  className="h-1.5 rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
+                                  style={{ width: `${university.fitScore}%` }}
                                 />
                               </div>
                             </div>
@@ -760,11 +756,10 @@ function Universities() {
                             e.stopPropagation(); // Prevent card click
                             handleShortlist(university._id);
                           }}
-                          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${
-                            university.shortlisted
+                          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${university.shortlisted
                               ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400'
                               : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-900/30 dark:text-indigo-400'
-                          }`}
+                            }`}
                         >
                           {university.shortlisted ? (
                             <span className="flex items-center justify-center gap-1.5">
@@ -778,17 +773,16 @@ function Universities() {
                             </span>
                           )}
                         </button>
-                        
+
                         <button
                           onClick={(e) => {
                             e.stopPropagation(); // Prevent card click
                             handleLock(university._id);
                           }}
-                          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${
-                            university.locked
+                          className={`flex-1 py-2.5 px-4 rounded-lg font-medium text-sm transition-all duration-200 ${university.locked
                               ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400'
                               : 'bg-gray-50 text-gray-700 hover:bg-gray-100 dark:bg-gray-900/30 dark:text-gray-400'
-                          }`}
+                            }`}
                         >
                           {university.locked ? (
                             <span className="flex items-center justify-center gap-1.5">
@@ -806,9 +800,10 @@ function Universities() {
                     </div>
                   </div>
                 </motion.div>
-            ))}
-          </AnimatePresence>
-        </div> {/* Close universities grid */}
+              ))}
+            </AnimatePresence>
+          </div> {/* Close universities grid */}
+        </div>
       </div>
     </div>
   );

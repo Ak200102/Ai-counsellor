@@ -34,7 +34,7 @@ export default function Navbar() {
 
   useEffect(() => {
     fetchUserData();
-    
+
     // Close dropdown when clicking outside
     const handleClickOutside = (event) => {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -97,22 +97,25 @@ export default function Navbar() {
             {/* Logo and Desktop Navigation */}
             <div className="flex items-center flex-1 min-w-0">
               <div className="flex-shrink-0 flex items-center">
-                <img 
-                  src="/logo.png" 
-                  alt="AI Counsellor Logo" 
+                <img
+                  src="/logo.png"
+                  alt="AI Counsellor Logo"
                   className="h-7 w-7 sm:h-8 sm:w-8 object-contain rounded-lg"
                   onError={(e) => {
                     e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='currentColor'%3E%3Cpath strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M12 14l9-5-9-5-9 5 9 5z'/%3E%3C/svg%3E";
                   }}
                 />
-                <span className="ml-1 sm:ml-2 text-lg sm:text-xl font-bold text-white hidden sm:block">
+                {/* <span className="ml-1 sm:ml-2 text-lg sm:text-xl font-bold text-white hidden sm:block">
                   AI Counsellor
                 </span>
                 <span className="ml-1 text-lg font-bold text-white sm:hidden">
                   AI
+                </span> */}
+                <span className="ml-2 text-base sm:text-xl font-bold text-white">
+                  AI Counsellor
                 </span>
               </div>
-              
+
               {/* Desktop Navigation */}
               <div className="hidden md:ml-6 lg:ml-8 md:flex md:space-x-3 lg:space-x-5">
                 {navigation.map((item, index) => {
@@ -124,7 +127,7 @@ export default function Navbar() {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      whileHover={{ 
+                      whileHover={{
                         scale: 1.05,
                         y: -2
                       }}
@@ -134,7 +137,7 @@ export default function Navbar() {
                       <motion.div
                         className="absolute inset-0 bg-indigo-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       />
-                      <motion.div 
+                      <motion.div
                         className="relative z-10"
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.6 }}
@@ -168,9 +171,9 @@ export default function Navbar() {
                 >
                   <div className="h-7 w-7 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
                     {(user?.avatar && user?.avatar !== '/logo.png' && user?.avatar !== 'logo.png') || (user?.profile?.avatar && user?.profile?.avatar !== '/logo.png' && user?.profile?.avatar !== 'logo.png') ? (
-                      <img 
-                        src={user?.avatar || user?.profile?.avatar} 
-                        alt="Profile Avatar" 
+                      <img
+                        src={user?.avatar || user?.profile?.avatar}
+                        alt="Profile Avatar"
                         className="w-full h-full object-cover"
                         onError={(e) => {
                           console.error('Avatar failed to load in navbar:', e);
@@ -208,9 +211,9 @@ export default function Navbar() {
                         <div className="flex items-center space-x-3">
                           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center overflow-hidden">
                             {(user?.avatar && user?.avatar !== '/logo.png' && user?.avatar !== 'logo.png') || (user?.profile?.avatar && user?.profile?.avatar !== '/logo.png' && user?.profile?.avatar !== 'logo.png') ? (
-                              <img 
-                                src={user?.avatar || user?.profile?.avatar} 
-                                alt="Profile Avatar" 
+                              <img
+                                src={user?.avatar || user?.profile?.avatar}
+                                alt="Profile Avatar"
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
                                   console.error('Avatar failed to load in navbar dropdown:', e);
@@ -248,7 +251,7 @@ export default function Navbar() {
                           <PencilIcon className="h-4 w-4 mr-3" />
                           Edit Profile
                         </button>
-                        
+
                         <a
                           href="/profile"
                           className="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors"
@@ -256,7 +259,7 @@ export default function Navbar() {
                           <UserCircleIcon className="h-4 w-4 mr-3" />
                           View Profile
                         </a>
-                        
+
                         <a
                           href="/settings"
                           className="flex items-center w-full px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 transition-colors"
@@ -264,7 +267,7 @@ export default function Navbar() {
                           <Cog6ToothIcon className="h-4 w-4 mr-3" />
                           Settings
                         </a>
-                        
+
                         <button
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-2 text-sm text-red-400 hover:bg-red-900/20 transition-colors"

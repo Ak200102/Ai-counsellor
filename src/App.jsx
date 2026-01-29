@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import GoogleCallback from "./pages/GoogleCallback";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import DashboardEnhanced from "./pages/DashboardEnhanced";
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="/auth/login" element={<Login/>}/>
         <Route path="/forgot-password" element={<ForgotPassword/>}/>
         <Route path="/reset-password" element={<ResetPassword/>}/>
+        <Route path="/auth/google/callback" element={<GoogleCallback/>}/>
         
         {/* Authenticated routes with navbar */}
         <Route path="/onboarding" element={

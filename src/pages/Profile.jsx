@@ -192,7 +192,31 @@ export default function Profile() {
       
       const response = await updateUser(nestedFormData);
       
-      console.log('Backend response:', response);
+      console.log('=== BACKEND RESPONSE ANALYSIS ===');
+      console.log('Full backend response:', response);
+      console.log('Backend user data:', response.data?.user);
+      console.log('Backend profile data:', response.data?.user?.profile);
+      
+      const backendProfile = response.data?.user?.profile;
+      if (backendProfile) {
+        console.log('=== CHECKING MISSING FIELDS IN RESPONSE ===');
+        console.log('workExperience in response:', backendProfile.workExperience);
+        console.log('researchExperience in response:', backendProfile.researchExperience);
+        console.log('publications in response:', backendProfile.publications);
+        console.log('certifications in response:', backendProfile.certifications);
+        console.log('sopStatus in response:', backendProfile.sopStatus);
+        console.log('lorStatus in response:', backendProfile.lorStatus);
+        console.log('resumeStatus in response:', backendProfile.resumeStatus);
+        console.log('ieltsTaken in response:', backendProfile.ieltsTaken);
+        console.log('ieltsScore in response:', backendProfile.ieltsScore);
+        console.log('toeflTaken in response:', backendProfile.toeflTaken);
+        console.log('toeflScore in response:', backendProfile.toeflScore);
+        console.log('greTaken in response:', backendProfile.greTaken);
+        console.log('greScore in response:', backendProfile.greScore);
+        console.log('gmatTaken in response:', backendProfile.gmatTaken);
+        console.log('gmatScore in response:', backendProfile.gmatScore);
+      }
+      
       console.log('Save completed successfully');
       
       setUser(prev => ({ ...prev, ...nestedFormData }));

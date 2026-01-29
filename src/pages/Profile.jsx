@@ -63,34 +63,25 @@ export default function Profile() {
       // Extract profile data with fallbacks
       const profile = userData.profile || {};
       
-      // Debug: Log the actual profile data structure
-      console.log('=== PROFILE DATA DEBUG ===');
-      console.log('Full user data:', userData);
-      console.log('Profile data:', profile);
-      console.log('Profile degree:', profile?.degree);
-      console.log('Profile subject:', profile?.subject);
-      console.log('Profile intendedDegree:', profile?.intendedDegree);
-      console.log('Profile fieldOfStudy:', profile?.fieldOfStudy);
-      
       setFormData({
         name: userData.name || "",
         email: userData.email || "",
         bio: profile?.bio || "",
-        // Academic Background (matching onboarding structure)
+        // Academic Background - EXACT MATCH WITH ONBOARDING
         degree: profile?.degree || "",
         subject: profile?.subject || "",
         university: profile?.university || "",
         graduationYear: profile?.graduationYear || "",
         gpa: profile?.gpa || "",
-        // Study Goal (matching onboarding structure)
+        // Study Goal - EXACT MATCH WITH ONBOARDING
         intendedDegree: profile?.intendedDegree || "",
         fieldOfStudy: profile?.fieldOfStudy || "",
         intakeYear: profile?.intakeYear || "",
         preferredCountries: profile?.preferredCountries || [],
-        // Budget (matching onboarding structure)
+        // Budget - EXACT MATCH WITH ONBOARDING
         budgetRange: profile?.budgetRange || "",
         fundingPlan: profile?.fundingPlan || "",
-        // Standardized Tests (matching onboarding structure)
+        // Standardized Tests - EXACT MATCH WITH ONBOARDING
         ieltsTaken: profile?.ieltsTaken || false,
         ieltsScore: profile?.ieltsScore?.overall || "",
         toeflTaken: profile?.toeflTaken || false,
@@ -99,12 +90,12 @@ export default function Profile() {
         greScore: profile?.greScore?.total || "",
         gmatTaken: profile?.gmatTaken || false,
         gmatScore: profile?.gmatScore?.total || "",
-        // Additional Academic Info (matching onboarding structure)
+        // Additional Academic Info - EXACT MATCH WITH ONBOARDING
         workExperience: profile?.workExperience || "",
         researchExperience: profile?.researchExperience || "",
         publications: profile?.publications || "",
         certifications: profile?.certifications || "",
-        // Application Readiness (matching onboarding structure)
+        // Application Readiness - EXACT MATCH WITH ONBOARDING
         sopStatus: profile?.sopStatus || "",
         lorStatus: profile?.lorStatus || "",
         resumeStatus: profile?.resumeStatus || ""
@@ -269,21 +260,21 @@ export default function Profile() {
       name: user?.name || "",
       email: user?.email || "",
       bio: profile?.bio || "",
-      // Academic Background (matching onboarding structure)
+      // Academic Background - EXACT MATCH WITH ONBOARDING
       degree: profile?.degree || "",
       subject: profile?.subject || "",
       university: profile?.university || "",
       graduationYear: profile?.graduationYear || "",
       gpa: profile?.gpa || "",
-      // Study Goal (matching onboarding structure)
+      // Study Goal - EXACT MATCH WITH ONBOARDING
       intendedDegree: profile?.intendedDegree || "",
       fieldOfStudy: profile?.fieldOfStudy || "",
       intakeYear: profile?.intakeYear || "",
       preferredCountries: profile?.preferredCountries || [],
-      // Budget (matching onboarding structure)
+      // Budget - EXACT MATCH WITH ONBOARDING
       budgetRange: profile?.budgetRange || "",
       fundingPlan: profile?.fundingPlan || "",
-      // Standardized Tests (matching onboarding structure)
+      // Standardized Tests - EXACT MATCH WITH ONBOARDING
       ieltsTaken: profile?.ieltsTaken || false,
       ieltsScore: profile?.ieltsScore?.overall || "",
       toeflTaken: profile?.toeflTaken || false,
@@ -292,12 +283,12 @@ export default function Profile() {
       greScore: profile?.greScore?.total || "",
       gmatTaken: profile?.gmatTaken || false,
       gmatScore: profile?.gmatScore?.total || "",
-      // Additional Academic Info (matching onboarding structure)
+      // Additional Academic Info - EXACT MATCH WITH ONBOARDING
       workExperience: profile?.workExperience || "",
       researchExperience: profile?.researchExperience || "",
       publications: profile?.publications || "",
       certifications: profile?.certifications || "",
-      // Application Readiness (matching onboarding structure)
+      // Application Readiness - EXACT MATCH WITH ONBOARDING
       sopStatus: profile?.sopStatus || "",
       lorStatus: profile?.lorStatus || "",
       resumeStatus: profile?.resumeStatus || ""
@@ -654,22 +645,7 @@ export default function Profile() {
           >
             <h2 className="text-xl font-bold text-white mb-6">Academic Preferences</h2>
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Target Country</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <GlobeAltIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    value={formData.targetCountry}
-                    onChange={(e) => setFormData(prev => ({ ...prev, targetCountry: e.target.value }))}
-                    disabled={!editing}
-                    className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-              
+                            
               {/* Academic Background Section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-white mb-4">Academic Background</h3>
@@ -1184,28 +1160,28 @@ export default function Profile() {
       });
     }
     
-    if (profile.studyGoal?.degree && profile.studyGoal?.field) {
+    if (profile.intendedDegree && profile.fieldOfStudy) {
       activities.push({
         icon: GlobeAltIcon,
-        text: `Set study goal: ${profile.studyGoal.degree} in ${profile.studyGoal.field}`,
+        text: `Set study goal: ${profile.intendedDegree} in ${profile.fieldOfStudy}`,
         time: "Today",
         color: "teal"
       });
     }
     
-    if (profile.budget?.range) {
+    if (profile.budgetRange) {
       activities.push({
         icon: ChartBarIcon,
-        text: `Set budget range: ${profile.budget.range}`,
+        text: `Set budget range: ${profile.budgetRange}`,
         time: "Today",
         color: "yellow"
       });
     }
     
-    if (profile.academic?.major) {
+    if (profile.subject) {
       activities.push({
         icon: AcademicCapIcon,
-        text: `Set major: ${profile.academic.major}`,
+        text: `Set major: ${profile.subject}`,
         time: "Today",
         color: "cyan"
       });

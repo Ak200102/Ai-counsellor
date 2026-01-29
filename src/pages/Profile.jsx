@@ -113,16 +113,12 @@ export default function Profile() {
       
       setFormData(newFormData);
       
-      // Log what was actually set in formData
-      console.log('=== FORM DATA SET ===');
-      console.log('ALL FormData keys:', Object.keys(formData));
-      console.log('Complete FormData object:', formData);
-      console.log('FormData degree:', profile?.academic?.level);
-      console.log('FormData subject:', profile?.academic?.major);
-      console.log('FormData intendedDegree:', profile?.studyGoal?.degree);
-      console.log('FormData fieldOfStudy:', profile?.studyGoal?.field);
-      console.log('FormData budgetRange:', profile?.budget?.range);
-      console.log('FormData preferredCountries:', profile?.studyGoal?.countries);
+      // Log what was actually set in formData after state update
+      setTimeout(() => {
+        console.log('=== FORM DATA SET (DELAYED) ===');
+        console.log('ALL FormData keys:', Object.keys(formData));
+        console.log('Complete FormData object:', formData);
+      }, 100);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
     } finally {
@@ -133,6 +129,11 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      // Get current form values directly from the form state
+      console.log('=== SAVE DEBUG ===');
+      console.log('Current formData state:', formData);
+      console.log('FormData keys at save:', Object.keys(formData));
+      
       // Convert flat formData to nested structure for backend - INCLUDE ALL FIELDS
       const nestedFormData = {
         name: formData.name,
@@ -172,7 +173,6 @@ export default function Profile() {
         resumeStatus: formData.resumeStatus
       };
       
-      console.log('=== SAVE DEBUG ===');
       console.log('Sending to backend:', nestedFormData);
       
       const response = await updateUser(nestedFormData);

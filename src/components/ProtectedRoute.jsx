@@ -9,27 +9,30 @@ export default function ProtectedRoute({ children }) {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
+      console.log("ProtectedRoute: Checking auth, token exists:", !!token);
       
       // If no token, redirect to landing
       if (!token) {
+        console.log("ProtectedRoute: No token found, redirecting to landing");
         setIsLoading(false);
         setIsAuthenticated(false);
         return;
       }
 
+      // If token exists, assume authenticated for now
+      // The API interceptor will handle token validation
+      console.log("ProtectedRoute: Token found, allowing access");
+      setIsAuthenticated(true);
+      setIsLoading(false);
+
+      // Optionally validate token in background
       try {
-        // Verify token by making a request to protected endpoint
-        const response = await api.get("/api/user/me");
-        if (response.data) {
-          setIsAuthenticated(true);
-        }
+        console.log("ProtectedRoute: Validating token in background");
+        await api.get("/api/user/me");
+        console.log("ProtectedRoute: Token validation successful");
       } catch (error) {
-        // Token is invalid or expired
-        console.log("Token validation failed:", error.response?.status);
-        localStorage.removeItem("token"); // Clear invalid token
-        setIsAuthenticated(false);
-      } finally {
-        setIsLoading(false);
+        console.log("ProtectedRoute: Token validation failed in background:", error.response?.status);
+        // Token is invalid, but we'll let the API interceptor handle the redirect
       }
     };
 

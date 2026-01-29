@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { askCounsellor, getMe, getUniversities, getConversationHistory } from "../helpers/endpoints";
+import { askCounsellor, getMe, getUniversities, getConversationHistory, saveConversation } from "../helpers/endpoints";
 import { shortlistUniversity, unshortlistUniversity, lockUniversity } from "../helpers/endpoints";
 import { createTask } from "../helpers/endpoints";
 import { getUniversityIdByName } from "../utils/universityMapping.js";
@@ -45,8 +45,55 @@ export default function AICounsellor() {
   const [showChatHistory, setShowChatHistory] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
+
+  // Auto-save conversation on unmount or when leaving page
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      saveCurrentConversation();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    // Save conversation when component unmounts
+    return () => {
+      saveCurrentConversation();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [messages]);
+
+  // Auto-save after each new message
+  useEffect(() => {
+    if (messages.length > 0) {
+      // Save conversation 2 seconds after last message to avoid spam
+      const timer = setTimeout(() => {
+        saveCurrentConversation();
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [messages]);
+
+  // Save current conversation to database (silent - no user feedback)
+  const saveCurrentConversation = async () => {
+    if (messages.length === 0) return;
+
+    try {
+      setIsSaving(true);
+      const response = await saveConversation(messages);
+      console.log("Conversation auto-saved successfully:", response.data);
+      
+      // Refresh chat history after saving
+      await fetchConversationHistory();
+    } catch (error) {
+      console.error("Error auto-saving conversation:", error);
+      // Don't show error to user for auto-save to avoid annoyance
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   // Fetch conversation history
   const fetchConversationHistory = async () => {
@@ -717,9 +764,17 @@ export default function AICounsellor() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-white">AI Counsellor</h1>
-                <p className="text-gray-300 text-sm">
-                  Your personal study-abroad guide
-                </p>
+                <div className="flex items-center space-x-2">
+                  <p className="text-gray-300 text-sm">
+                    Your personal study-abroad guide
+                  </p>
+                  {isSaving && (
+                    <div className="flex items-center space-x-1 text-green-400">
+                      <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                      <span className="text-xs">Auto-saving...</span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -950,7 +1005,7 @@ export default function AICounsellor() {
                     <ClockIcon className="w-6 h-6 text-white" />
                     <h2 className="text-xl font-bold text-white">Chat History</h2>
                     <span className="text-blue-100 text-sm">
-                      {chatHistory.length} conversations
+                      {messages.length + chatHistory.length} messages
                     </span>
                   </div>
                   <button
@@ -969,7 +1024,7 @@ export default function AICounsellor() {
                     <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
                     <span className="ml-3 text-gray-300">Loading chat history...</span>
                   </div>
-                ) : chatHistory.length === 0 ? (
+                ) : chatHistory.length === 0 && messages.length === 0 ? (
                   <div className="text-center py-12">
                     <ChatBubbleLeftRightIcon className="w-16 h-16 text-gray-500 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-300 mb-2">No Chat History</h3>
@@ -977,9 +1032,10 @@ export default function AICounsellor() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {chatHistory.map((message, index) => (
+                    {/* Combine current messages with saved history */}
+                    {[...messages, ...chatHistory].map((message, index) => (
                       <motion.div
-                        key={index}
+                        key={`message-${index}`}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
@@ -1000,12 +1056,20 @@ export default function AICounsellor() {
                               <span className="text-xs font-medium opacity-75">
                                 {message.role === 'user' ? 'You' : 'AI Counsellor'}
                               </span>
+                              {messages.includes(message) && (
+                                <span className="text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">
+                                  Current Session
+                                </span>
+                              )}
                             </div>
                             <p className="text-sm leading-relaxed whitespace-pre-wrap">
                               {message.content}
                             </p>
                             <div className="mt-2 text-xs opacity-60">
-                              {new Date(message.timestamp).toLocaleString()}
+                              {message.timestamp 
+                                ? new Date(message.timestamp).toLocaleString()
+                                : 'Just now'
+                              }
                             </div>
                           </div>
                         </div>

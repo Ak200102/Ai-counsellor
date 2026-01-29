@@ -63,6 +63,15 @@ export default function Profile() {
       // Extract profile data with fallbacks
       const profile = userData.profile || {};
       
+      // Debug: Log the actual profile data structure
+      console.log('=== PROFILE DATA DEBUG ===');
+      console.log('Full user data:', userData);
+      console.log('Profile data:', profile);
+      console.log('Profile degree:', profile?.degree);
+      console.log('Profile subject:', profile?.subject);
+      console.log('Profile intendedDegree:', profile?.intendedDegree);
+      console.log('Profile fieldOfStudy:', profile?.fieldOfStudy);
+      
       setFormData({
         name: userData.name || "",
         email: userData.email || "",
@@ -660,37 +669,7 @@ export default function Profile() {
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Study Level</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <AcademicCapIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    value={formData.studyLevel}
-                    onChange={(e) => setFormData(prev => ({ ...prev, studyLevel: e.target.value }))}
-                    disabled={!editing}
-                    className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Budget Range</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <DocumentTextIcon className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    value={formData.budget}
-                    onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
-                    disabled={!editing}
-                    className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-
+              
               {/* Academic Background Section */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-white mb-4">Academic Background</h3>

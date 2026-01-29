@@ -138,16 +138,24 @@ function Universities() {
       const profileMessage = `
         My profile details:
         - Academic Level: ${profile.academic?.level || 'Not specified'}
-        - Major: ${profile.academic?.major || 'Not specified'}
+        - Major/Field of Study: ${profile.academic?.major || profile.academic?.fieldOfStudy || 'Not specified'}
         - GPA: ${profile.academic?.gpa || 'Not specified'}
         - Study Goal Degree: ${profile.studyGoal?.degree || 'Not specified'}
-        - Study Goal Field: ${profile.studyGoal?.field || 'Not specified'}
-        - Budget Range: ${profile.budget?.range || 'Not specified'}
-        - Preferred Countries: ${profile.studyGoal?.preferredCountries?.join(', ') || 'Not specified'}
+        - Study Goal Field: ${profile.studyGoal?.field || profile.studyGoal?.intendedMajor || 'Not specified'}
+        - Career Goals: ${profile.careerGoals?.shortTerm || profile.careerGoals?.longTerm || profile.careerGoals?.aspirations || 'Not specified'}
+        - Industry Interest: ${profile.careerGoals?.industry || profile.careerGoals?.sector || 'Not specified'}
+        - Job Role Aspirations: ${profile.careerGoals?.jobRole || profile.careerGoals?.position || 'Not specified'}
+        - Budget Range: ${profile.budget?.range || profile.budget?.annual || 'Not specified'}
+        - Preferred Countries: ${profile.studyGoal?.preferredCountries?.join(', ') || profile.studyGoal?.countries?.join(', ') || 'Not specified'}
         - IELTS Score: ${profile.exams?.ielts?.score || 'Not specified'}
         - GRE Score: ${profile.exams?.gre?.score || 'Not specified'}
+        - Work Experience: ${profile.experience?.years || profile.experience?.duration || 'Not specified'} years
+        - Skills: ${profile.skills?.technical?.join(', ') || profile.skills?.all?.join(', ') || 'Not specified'}
         
-        Based on this profile, what universities do you recommend for me? Please provide specific university names with categories (Dream, Target, Safe) and acceptance chances.
+        Based on this comprehensive profile including my field of study (${profile.academic?.major || profile.academic?.fieldOfStudy || 'Not specified'}) 
+        and career goals (${profile.careerGoals?.shortTerm || profile.careerGoals?.aspirations || 'Not specified'}), 
+        what universities do you recommend for me? Please provide specific university names with categories (Dream, Target, Safe) 
+        and acceptance chances that align with my academic background and career aspirations.
       `;
 
       const response = await askCounsellor(profileMessage);

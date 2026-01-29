@@ -243,7 +243,36 @@ export default function AICounsellor() {
         }
       }
       
-      const response = await askCounsellor(inputMessage);
+      // Build user profile context for AI
+      const profile = user?.profile || {};
+      const profileContext = `
+        User Profile Context:
+        - Academic Level: ${profile.academic?.level || 'Not specified'}
+        - Major/Field of Study: ${profile.academic?.major || profile.academic?.fieldOfStudy || 'Not specified'}
+        - GPA: ${profile.academic?.gpa || 'Not specified'}
+        - Study Goal Degree: ${profile.studyGoal?.degree || 'Not specified'}
+        - Study Goal Field: ${profile.studyGoal?.field || profile.studyGoal?.intendedMajor || 'Not specified'}
+        - Career Goals: ${profile.careerGoals?.shortTerm || profile.careerGoals?.longTerm || profile.careerGoals?.aspirations || 'Not specified'}
+        - Industry Interest: ${profile.careerGoals?.industry || profile.careerGoals?.sector || 'Not specified'}
+        - Job Role Aspirations: ${profile.careerGoals?.jobRole || profile.careerGoals?.position || 'Not specified'}
+        - Budget Range: ${profile.budget?.range || profile.budget?.annual || 'Not specified'}
+        - Preferred Countries: ${profile.studyGoal?.preferredCountries?.join(', ') || profile.studyGoal?.countries?.join(', ') || 'Not specified'}
+        - IELTS Score: ${profile.exams?.ielts?.score || 'Not specified'}
+        - GRE Score: ${profile.exams?.gre?.score || 'Not specified'}
+        - Work Experience: ${profile.experience?.years || profile.experience?.duration || 'Not specified'} years
+        - Skills: ${profile.skills?.technical?.join(', ') || profile.skills?.all?.join(', ') || 'Not specified'}
+        - Shortlisted Universities: ${user?.profile?.shortlistedUniversities?.map(u => u.universityId?.name || u.universityId?.universityId?.name || 'Unknown').join(', ') || 'None'}
+        - Locked University: ${user?.profile?.lockedUniversity?.universityId?.name || 'None'}
+        
+        Please consider this user's field of study (${profile.academic?.major || profile.academic?.fieldOfStudy || 'Not specified'}) 
+        and career goals (${profile.careerGoals?.shortTerm || profile.careerGoals?.aspirations || 'Not specified'}) 
+        when providing recommendations and advice.
+      `;
+      
+      // Combine profile context with user message
+      const enhancedMessage = `${profileContext}\n\nUser Question: ${inputMessage}`;
+      
+      const response = await askCounsellor(enhancedMessage);
       console.log("AI Response received:", response);
       console.log("AI Recommendations Response:", response.data);
       console.log("AI Response actionableNextSteps:", response.data.actionableNextSteps);

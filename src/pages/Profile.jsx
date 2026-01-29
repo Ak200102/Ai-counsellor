@@ -71,9 +71,38 @@ export default function Profile() {
         studyLevel: profile?.academic?.level || "",
         budget: profile?.budget?.range || "",
         major: profile?.academic?.major || "",
+        fieldOfStudy: profile?.academic?.fieldOfStudy || "",
         gpa: profile?.academic?.gpa || "",
         degree: profile?.studyGoal?.degree || "",
-        field: profile?.studyGoal?.field || ""
+        field: profile?.studyGoal?.field || "",
+        intendedMajor: profile?.studyGoal?.intendedMajor || "",
+        // Career Goals
+        shortTermGoals: profile?.careerGoals?.shortTerm || "",
+        longTermGoals: profile?.careerGoals?.longTerm || "",
+        careerAspirations: profile?.careerGoals?.aspirations || "",
+        industryInterest: profile?.careerGoals?.industry || "",
+        sectorInterest: profile?.careerGoals?.sector || "",
+        jobRoleAspirations: profile?.careerGoals?.jobRole || "",
+        positionAspirations: profile?.careerGoals?.position || "",
+        // Experience
+        workExperienceYears: profile?.experience?.years || "",
+        workExperienceDuration: profile?.experience?.duration || "",
+        company: profile?.experience?.company || "",
+        position: profile?.experience?.position || "",
+        // Skills
+        technicalSkills: profile?.skills?.technical?.join(', ') || "",
+        allSkills: profile?.skills?.all?.join(', ') || "",
+        // Exams
+        ieltsScore: profile?.exams?.ielts?.score || "",
+        greScore: profile?.exams?.gre?.score || "",
+        toeflScore: profile?.exams?.toefl?.score || "",
+        satScore: profile?.exams?.sat?.score || "",
+        // Budget Details
+        annualBudget: profile?.budget?.annual || "",
+        totalBudget: profile?.budget?.total || "",
+        // Additional Countries
+        preferredCountries: profile?.studyGoal?.preferredCountries?.join(', ') || "",
+        allCountries: profile?.studyGoal?.countries?.join(', ') || ""
       });
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -239,9 +268,38 @@ export default function Profile() {
       studyLevel: profile?.academic?.level || "",
       budget: profile?.budget?.range || "",
       major: profile?.academic?.major || "",
+      fieldOfStudy: profile?.academic?.fieldOfStudy || "",
       gpa: profile?.academic?.gpa || "",
       degree: profile?.studyGoal?.degree || "",
-      field: profile?.studyGoal?.field || ""
+      field: profile?.studyGoal?.field || "",
+      intendedMajor: profile?.studyGoal?.intendedMajor || "",
+      // Career Goals
+      shortTermGoals: profile?.careerGoals?.shortTerm || "",
+      longTermGoals: profile?.careerGoals?.longTerm || "",
+      careerAspirations: profile?.careerGoals?.aspirations || "",
+      industryInterest: profile?.careerGoals?.industry || "",
+      sectorInterest: profile?.careerGoals?.sector || "",
+      jobRoleAspirations: profile?.careerGoals?.jobRole || "",
+      positionAspirations: profile?.careerGoals?.position || "",
+      // Experience
+      workExperienceYears: profile?.experience?.years || "",
+      workExperienceDuration: profile?.experience?.duration || "",
+      company: profile?.experience?.company || "",
+      position: profile?.experience?.position || "",
+      // Skills
+      technicalSkills: profile?.skills?.technical?.join(', ') || "",
+      allSkills: profile?.skills?.all?.join(', ') || "",
+      // Exams
+      ieltsScore: profile?.exams?.ielts?.score || "",
+      greScore: profile?.exams?.gre?.score || "",
+      toeflScore: profile?.exams?.toefl?.score || "",
+      satScore: profile?.exams?.sat?.score || "",
+      // Budget Details
+      annualBudget: profile?.budget?.annual || "",
+      totalBudget: profile?.budget?.total || "",
+      // Additional Countries
+      preferredCountries: profile?.studyGoal?.preferredCountries?.join(', ') || "",
+      allCountries: profile?.studyGoal?.countries?.join(', ') || ""
     });
     setEditing(false);
   };
@@ -638,6 +696,221 @@ export default function Profile() {
                     disabled={!editing}
                     className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
+                </div>
+              </div>
+
+              {/* Career Goals Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Career Goals & Aspirations</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Short-term Goals</label>
+                    <textarea
+                      value={formData.shortTermGoals}
+                      onChange={(e) => setFormData(prev => ({ ...prev, shortTermGoals: e.target.value }))}
+                      disabled={!editing}
+                      rows={3}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="What are your immediate career goals?"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Long-term Goals</label>
+                    <textarea
+                      value={formData.longTermGoals}
+                      onChange={(e) => setFormData(prev => ({ ...prev, longTermGoals: e.target.value }))}
+                      disabled={!editing}
+                      rows={3}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Where do you see yourself in 5-10 years?"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Industry Interest</label>
+                    <input
+                      type="text"
+                      value={formData.industryInterest}
+                      onChange={(e) => setFormData(prev => ({ ...prev, industryInterest: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Technology, Finance, Healthcare"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Job Role Aspirations</label>
+                    <input
+                      type="text"
+                      value={formData.jobRoleAspirations}
+                      onChange={(e) => setFormData(prev => ({ ...prev, jobRoleAspirations: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Software Engineer, Data Scientist"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Career Aspirations</label>
+                    <input
+                      type="text"
+                      value={formData.careerAspirations}
+                      onChange={(e) => setFormData(prev => ({ ...prev, careerAspirations: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Your dream career position"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Experience Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Work Experience</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Years of Experience</label>
+                    <input
+                      type="text"
+                      value={formData.workExperienceYears}
+                      onChange={(e) => setFormData(prev => ({ ...prev, workExperienceYears: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 2 years, 6 months"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Company</label>
+                    <input
+                      type="text"
+                      value={formData.company}
+                      onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Current or most recent company"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Skills Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Skills & Expertise</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Technical Skills</label>
+                  <textarea
+                    value={formData.technicalSkills}
+                    onChange={(e) => setFormData(prev => ({ ...prev, technicalSkills: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="e.g., Python, JavaScript, React, Machine Learning (comma-separated)"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">All Skills</label>
+                  <textarea
+                    value={formData.allSkills}
+                    onChange={(e) => setFormData(prev => ({ ...prev, allSkills: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Include soft skills, languages, certifications (comma-separated)"
+                  />
+                </div>
+              </div>
+
+              {/* Exam Scores Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Exam Scores</h3>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">IELTS Score</label>
+                    <input
+                      type="text"
+                      value={formData.ieltsScore}
+                      onChange={(e) => setFormData(prev => ({ ...prev, ieltsScore: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 7.5"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">GRE Score</label>
+                    <input
+                      type="text"
+                      value={formData.greScore}
+                      onChange={(e) => setFormData(prev => ({ ...prev, greScore: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 320"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">TOEFL Score</label>
+                    <input
+                      type="text"
+                      value={formData.toeflScore}
+                      onChange={(e) => setFormData(prev => ({ ...prev, toeflScore: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 100"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">SAT Score</label>
+                    <input
+                      type="text"
+                      value={formData.satScore}
+                      onChange={(e) => setFormData(prev => ({ ...prev, satScore: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 1400"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Details */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Additional Preferences</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Preferred Countries</label>
+                    <textarea
+                      value={formData.preferredCountries}
+                      onChange={(e) => setFormData(prev => ({ ...prev, preferredCountries: e.target.value }))}
+                      disabled={!editing}
+                      rows={3}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., USA, Canada, UK, Australia (comma-separated)"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Annual Budget</label>
+                    <input
+                      type="text"
+                      value={formData.annualBudget}
+                      onChange={(e) => setFormData(prev => ({ ...prev, annualBudget: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., $30,000"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

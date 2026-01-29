@@ -68,6 +68,12 @@ export default function Profile() {
       console.log('Has profile:', !!profile);
       console.log('All profile keys:', Object.keys(profile));
       console.log('Full profile object:', profile);
+      console.log('Academic level:', profile?.academic?.level);
+      console.log('Academic major:', profile?.academic?.major);
+      console.log('StudyGoal degree:', profile?.studyGoal?.degree);
+      console.log('StudyGoal field:', profile?.studyGoal?.field);
+      console.log('Budget range:', profile?.budget?.range);
+      console.log('StudyGoal countries:', profile?.studyGoal?.countries);
       console.log('Degree from DB:', profile?.degree);
       console.log('Subject from DB:', profile?.subject);
       console.log('IntendedDegree from DB:', profile?.intendedDegree);
@@ -77,21 +83,21 @@ export default function Profile() {
         name: userData.name || "",
         email: userData.email || "",
         bio: profile?.bio || "",
-        // Academic Background - EXACT DATABASE FIELD NAMES
+        // Academic Background - FROM NESTED STRUCTURE
         degree: profile?.academic?.level || "",
         subject: profile?.academic?.major || "",
         university: profile?.academic?.university || "",
         graduationYear: profile?.academic?.graduationYear || "",
         gpa: profile?.academic?.gpa || "",
-        // Study Goal - EXACT DATABASE FIELD NAMES
+        // Study Goal - FROM NESTED STRUCTURE
         intendedDegree: profile?.studyGoal?.degree || "",
         fieldOfStudy: profile?.studyGoal?.field || "",
         intakeYear: profile?.studyGoal?.intakeYear || "",
         preferredCountries: profile?.studyGoal?.countries || [],
-        // Budget - EXACT DATABASE FIELD NAMES
+        // Budget - FROM NESTED STRUCTURE
         budgetRange: profile?.budget?.range || "",
         fundingPlan: profile?.budget?.funding || "",
-        // Standardized Tests - CHECK IF EXIST
+        // Standardized Tests - FROM NESTED OR DIRECT STRUCTURE
         ieltsTaken: profile?.ieltsTaken || false,
         ieltsScore: profile?.ieltsScore?.overall || "",
         toeflTaken: profile?.toeflTaken || false,
@@ -100,12 +106,12 @@ export default function Profile() {
         greScore: profile?.greScore?.total || "",
         gmatTaken: profile?.gmatTaken || false,
         gmatScore: profile?.gmatScore?.total || "",
-        // Additional Academic Info - CHECK IF EXIST
+        // Additional Academic Info - FROM DIRECT STRUCTURE
         workExperience: profile?.workExperience || "",
         researchExperience: profile?.researchExperience || "",
         publications: profile?.publications || "",
         certifications: profile?.certifications || "",
-        // Application Readiness - CHECK IF EXIST
+        // Application Readiness - FROM DIRECT STRUCTURE
         sopStatus: profile?.sopStatus || "",
         lorStatus: profile?.lorStatus || "",
         resumeStatus: profile?.resumeStatus || ""
@@ -113,10 +119,12 @@ export default function Profile() {
       
       // Log what was actually set in formData
       console.log('=== FORM DATA SET ===');
-      console.log('FormData degree:', formData.degree);
-      console.log('FormData subject:', formData.subject);
-      console.log('FormData intendedDegree:', formData.intendedDegree);
-      console.log('FormData fieldOfStudy:', formData.fieldOfStudy);
+      console.log('FormData degree:', profile?.academic?.level);
+      console.log('FormData subject:', profile?.academic?.major);
+      console.log('FormData intendedDegree:', profile?.studyGoal?.degree);
+      console.log('FormData fieldOfStudy:', profile?.studyGoal?.field);
+      console.log('FormData budgetRange:', profile?.budget?.range);
+      console.log('FormData preferredCountries:', profile?.studyGoal?.countries);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
     } finally {
@@ -277,21 +285,21 @@ export default function Profile() {
       name: user?.name || "",
       email: user?.email || "",
       bio: profile?.bio || "",
-      // Academic Background - EXACT DATABASE FIELD NAMES
+      // Academic Background - FROM NESTED STRUCTURE
       degree: profile?.academic?.level || "",
       subject: profile?.academic?.major || "",
       university: profile?.academic?.university || "",
       graduationYear: profile?.academic?.graduationYear || "",
       gpa: profile?.academic?.gpa || "",
-      // Study Goal - EXACT DATABASE FIELD NAMES
+      // Study Goal - FROM NESTED STRUCTURE
       intendedDegree: profile?.studyGoal?.degree || "",
       fieldOfStudy: profile?.studyGoal?.field || "",
       intakeYear: profile?.studyGoal?.intakeYear || "",
       preferredCountries: profile?.studyGoal?.countries || [],
-      // Budget - EXACT DATABASE FIELD NAMES
+      // Budget - FROM NESTED STRUCTURE
       budgetRange: profile?.budget?.range || "",
       fundingPlan: profile?.budget?.funding || "",
-      // Standardized Tests - CHECK IF EXIST
+      // Standardized Tests - FROM NESTED OR DIRECT STRUCTURE
       ieltsTaken: profile?.ieltsTaken || false,
       ieltsScore: profile?.ieltsScore?.overall || "",
       toeflTaken: profile?.toeflTaken || false,
@@ -300,12 +308,12 @@ export default function Profile() {
       greScore: profile?.greScore?.total || "",
       gmatTaken: profile?.gmatTaken || false,
       gmatScore: profile?.gmatScore?.total || "",
-      // Additional Academic Info - CHECK IF EXIST
+      // Additional Academic Info - FROM DIRECT STRUCTURE
       workExperience: profile?.workExperience || "",
       researchExperience: profile?.researchExperience || "",
       publications: profile?.publications || "",
       certifications: profile?.certifications || "",
-      // Application Readiness - CHECK IF EXIST
+      // Application Readiness - FROM DIRECT STRUCTURE
       sopStatus: profile?.sopStatus || "",
       lorStatus: profile?.lorStatus || "",
       resumeStatus: profile?.resumeStatus || ""

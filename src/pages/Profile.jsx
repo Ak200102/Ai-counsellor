@@ -66,6 +66,8 @@ export default function Profile() {
       // Simple check to see if onboarding data exists
       console.log('=== PROFILE LOADING CHECK ===');
       console.log('Has profile:', !!profile);
+      console.log('All profile keys:', Object.keys(profile));
+      console.log('Full profile object:', profile);
       console.log('Degree from DB:', profile?.degree);
       console.log('Subject from DB:', profile?.subject);
       console.log('IntendedDegree from DB:', profile?.intendedDegree);

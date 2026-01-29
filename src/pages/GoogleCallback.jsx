@@ -25,8 +25,14 @@ export default function GoogleCallback() {
           // Set token in Redux
           dispatch(setToken(token));
           
-          // Redirect to onboarding (Google users need to complete onboarding)
-          navigate("/onboarding");
+          // Check if user has completed onboarding
+          if (user.onboardingCompleted) {
+            // User has completed onboarding, go to dashboard
+            navigate("/dashboard");
+          } else {
+            // User needs to complete onboarding
+            navigate("/onboarding");
+          }
         } else {
           // If no token or user data, redirect to login
           navigate("/auth/login");
@@ -44,7 +50,7 @@ export default function GoogleCallback() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
       <div className="text-center">
         <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p className="text-gray-900 dark:text-white text-lg">Completing Google sign up...</p>
+        <p className="text-gray-900 dark:text-white text-lg">Completing Google sign in...</p>
       </div>
     </div>
   );

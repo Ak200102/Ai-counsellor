@@ -43,6 +43,13 @@ export default function Profile() {
     fetchTasks();
   }, []);
 
+  // Keep formDataRef in sync with formData state
+  useEffect(() => {
+    if (formData && Object.keys(formData).length > 0) {
+      formDataRef.current = formData;
+    }
+  }, [formData]);
+
   const fetchTasks = async () => {
     try {
       const response = await getTasks();
@@ -112,17 +119,13 @@ export default function Profile() {
       console.log('New FormData keys:', Object.keys(newFormData));
       console.log('New FormData object:', newFormData);
       
-      // Store in ref for immediate access
+      // Store in ref for immediate access AND update state for reactivity
       formDataRef.current = newFormData;
       setFormData(newFormData);
       
-      // Log what was actually set in formData after state update
-      setTimeout(() => {
-        console.log('=== FORM DATA SET (DELAYED) ===');
-        console.log('ALL FormData keys:', Object.keys(formData));
-        console.log('Complete FormData object:', formData);
-        console.log('FormDataRef current:', formDataRef.current);
-      }, 100);
+      console.log('=== FORM DATA LOADED ===');
+      console.log('FormDataRef current after load:', formDataRef.current);
+      console.log('FormData state after load:', formData);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
     } finally {

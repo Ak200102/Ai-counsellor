@@ -243,30 +243,60 @@ export default function AICounsellor() {
         }
       }
       
-      // Build user profile context for AI
+      // Build comprehensive user profile context for AI
       const profile = user?.profile || {};
       const profileContext = `
-        User Profile Context:
-        - Academic Level: ${profile.academic?.level || 'Not specified'}
-        - Major/Field of Study: ${profile.academic?.major || profile.academic?.fieldOfStudy || 'Not specified'}
+        COMPLETE USER PROFILE FOR AI ANALYSIS:
+        
+        🎓 ACADEMIC BACKGROUND:
+        - Current Degree Level: ${profile.academic?.level || 'Not specified'}
+        - Major/Subject: ${profile.academic?.major || 'Not specified'}
+        - Current University: ${profile.academic?.university || 'Not specified'}
+        - Graduation Year: ${profile.academic?.graduationYear || 'Not specified'}
         - GPA: ${profile.academic?.gpa || 'Not specified'}
-        - Study Goal Degree: ${profile.studyGoal?.degree || 'Not specified'}
-        - Study Goal Field: ${profile.studyGoal?.field || profile.studyGoal?.intendedMajor || 'Not specified'}
-        - Career Goals: ${profile.careerGoals?.shortTerm || profile.careerGoals?.longTerm || profile.careerGoals?.aspirations || 'Not specified'}
-        - Industry Interest: ${profile.careerGoals?.industry || profile.careerGoals?.sector || 'Not specified'}
-        - Job Role Aspirations: ${profile.careerGoals?.jobRole || profile.careerGoals?.position || 'Not specified'}
-        - Budget Range: ${profile.budget?.range || profile.budget?.annual || 'Not specified'}
-        - Preferred Countries: ${profile.studyGoal?.preferredCountries?.join(', ') || profile.studyGoal?.countries?.join(', ') || 'Not specified'}
-        - IELTS Score: ${profile.exams?.ielts?.score || 'Not specified'}
-        - GRE Score: ${profile.exams?.gre?.score || 'Not specified'}
-        - Work Experience: ${profile.experience?.years || profile.experience?.duration || 'Not specified'} years
-        - Skills: ${profile.skills?.technical?.join(', ') || profile.skills?.all?.join(', ') || 'Not specified'}
+        
+        🎯 STUDY GOALS:
+        - Intended Degree: ${profile.studyGoal?.degree || 'Not specified'}
+        - Target Field of Study: ${profile.studyGoal?.field || 'Not specified'}
+        - Intake Year: ${profile.studyGoal?.intakeYear || 'Not specified'}
+        - Preferred Countries: ${profile.studyGoal?.countries?.join(', ') || 'Not specified'}
+        
+        💰 BUDGET & FUNDING:
+        - Budget Range: ${profile.budget?.range || 'Not specified'}
+        - Funding Plan: ${profile.budget?.funding || 'Not specified'}
+        
+        📝 STANDARDIZED TESTS:
+        - IELTS: ${profile.ieltsTaken ? `Taken (Score: ${profile.ieltsScore?.overall || 'Not specified'})` : 'Not taken'}
+        - TOEFL: ${profile.toeflTaken ? `Taken (Score: ${profile.toeflScore?.total || 'Not specified'})` : 'Not taken'}
+        - GRE: ${profile.greTaken ? `Taken (Score: ${profile.greScore?.total || 'Not specified'})` : 'Not taken'}
+        - GMAT: ${profile.gmatTaken ? `Taken (Score: ${profile.gmatScore?.total || 'Not specified'})` : 'Not taken'}
+        
+        📚 ADDITIONAL ACADEMIC INFO:
+        - Work Experience: ${profile.workExperience || 'Not specified'}
+        - Research Experience: ${profile.researchExperience || 'Not specified'}
+        - Publications: ${profile.publications || 'Not specified'}
+        - Certifications: ${profile.certifications || 'Not specified'}
+        
+        📄 APPLICATION READINESS:
+        - SOP Status: ${profile.sopStatus || 'Not specified'}
+        - LOR Status: ${profile.lorStatus || 'Not specified'}
+        - Resume Status: ${profile.resumeStatus || 'Not specified'}
+        
+        🏛️ UNIVERSITY STATUS:
         - Shortlisted Universities: ${user?.profile?.shortlistedUniversities?.map(u => u.universityId?.name || u.universityId?.universityId?.name || 'Unknown').join(', ') || 'None'}
         - Locked University: ${user?.profile?.lockedUniversity?.universityId?.name || 'None'}
+        - Number of Shortlisted: ${user?.profile?.shortlistedUniversities?.length || 0}
         
-        Please consider this user's field of study (${profile.academic?.major || profile.academic?.fieldOfStudy || 'Not specified'}) 
-        and career goals (${profile.careerGoals?.shortTerm || profile.careerGoals?.aspirations || 'Not specified'}) 
-        when providing recommendations and advice.
+        📊 PROFILE COMPLETION: ${profile.completionPercentage || 0}%
+        
+        AI ANALYSIS INSTRUCTIONS:
+        1. Use the academic background (${profile.academic?.level || 'Not specified'} in ${profile.academic?.major || 'Not specified'}) to assess eligibility
+        2. Consider study goals (${profile.studyGoal?.degree || 'Not specified'} in ${profile.studyGoal?.field || 'Not specified'}) for recommendations
+        3. Factor in budget constraints (${profile.budget?.range || 'Not specified'}) when suggesting universities
+        4. Account for preferred countries (${profile.studyGoal?.countries?.join(', ') || 'Not specified'}) in recommendations
+        5. Consider test scores for admission requirements
+        6. Evaluate application readiness and provide next steps
+        7. Provide personalized advice based on complete profile
       `;
       
       // Combine profile context with user message

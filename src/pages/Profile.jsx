@@ -63,22 +63,6 @@ export default function Profile() {
       // Extract profile data with fallbacks
       const profile = userData.profile || {};
       
-      // Simple check to see if onboarding data exists
-      console.log('=== PROFILE LOADING CHECK ===');
-      console.log('Has profile:', !!profile);
-      console.log('All profile keys:', Object.keys(profile));
-      console.log('Full profile object:', profile);
-      console.log('Academic level:', profile?.academic?.level);
-      console.log('Academic major:', profile?.academic?.major);
-      console.log('StudyGoal degree:', profile?.studyGoal?.degree);
-      console.log('StudyGoal field:', profile?.studyGoal?.field);
-      console.log('Budget range:', profile?.budget?.range);
-      console.log('StudyGoal countries:', profile?.studyGoal?.countries);
-      console.log('Degree from DB:', profile?.degree);
-      console.log('Subject from DB:', profile?.subject);
-      console.log('IntendedDegree from DB:', profile?.intendedDegree);
-      console.log('FieldOfStudy from DB:', profile?.fieldOfStudy);
-      
       setFormData({
         name: userData.name || "",
         email: userData.email || "",
@@ -135,22 +119,51 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      console.log("=== FRONTEND SAVE START ===");
-      console.log("Form data being sent:", formData);
-      console.log("Token in localStorage:", localStorage.getItem('token'));
+      // Convert flat formData to nested structure for backend
+      const nestedFormData = {
+        name: formData.name,
+        email: formData.email,
+        bio: formData.bio,
+        // Academic Background - NESTED STRUCTURE
+        degree: formData.degree,
+        subject: formData.subject,
+        university: formData.university,
+        graduationYear: formData.graduationYear,
+        gpa: formData.gpa,
+        // Study Goal - NESTED STRUCTURE
+        intendedDegree: formData.intendedDegree,
+        fieldOfStudy: formData.fieldOfStudy,
+        intakeYear: formData.intakeYear,
+        preferredCountries: formData.preferredCountries,
+        // Budget - NESTED STRUCTURE
+        budgetRange: formData.budgetRange,
+        fundingPlan: formData.fundingPlan,
+        // Standardized Tests
+        ieltsTaken: formData.ieltsTaken,
+        ieltsScore: formData.ieltsScore,
+        toeflTaken: formData.toeflTaken,
+        toeflScore: formData.toeflScore,
+        greTaken: formData.greTaken,
+        greScore: formData.greScore,
+        gmatTaken: formData.gmatTaken,
+        gmatScore: formData.gmatScore,
+        // Additional Academic Info
+        workExperience: formData.workExperience,
+        researchExperience: formData.researchExperience,
+        publications: formData.publications,
+        certifications: formData.certifications,
+        // Application Readiness
+        sopStatus: formData.sopStatus,
+        lorStatus: formData.lorStatus,
+        resumeStatus: formData.resumeStatus
+      };
       
-      const response = await updateUser(formData);
-      console.log("Update response:", response);
+      const response = await updateUser(nestedFormData);
       
-      setUser(prev => ({ ...prev, ...formData }));
+      setUser(prev => ({ ...prev, ...nestedFormData }));
       setEditing(false);
-      
-      console.log("=== FRONTEND SAVE SUCCESS ===");
     } catch (error) {
-      console.error("=== FRONTEND SAVE ERROR ===");
       console.error("Failed to update profile:", error);
-      console.error("Error response:", error.response?.data);
-      console.error("Error status:", error.response?.status);
     } finally {
       setSaving(false);
     }

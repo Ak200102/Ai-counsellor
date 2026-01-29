@@ -438,24 +438,51 @@ function Universities() {
             {/* Progress Stages */}
             <div className="flex items-center justify-between bg-white/10 backdrop-blur-lg rounded-xl p-4">
               {[
-                { stage: 'onboarding', label: 'Onboarding', completed: onboardingComplete },
-                { stage: 'discovery', label: 'Discovery', completed: currentStage === 'discovery' || currentStage === 'shortlisting' || currentStage === 'locked' },
-                { stage: 'shortlisting', label: 'Shortlisting', completed: currentStage === 'shortlisting' || currentStage === 'locked' },
-                { stage: 'locked', label: 'Decision', completed: currentStage === 'locked' },
-                { stage: 'application', label: 'Application', completed: false }
+                { 
+                  stage: 'onboarding', 
+                  label: 'Onboarding', 
+                  completed: onboardingComplete,
+                  current: currentStage === 'ONBOARDING'
+                },
+                { 
+                  stage: 'discovery', 
+                  label: 'Discovery', 
+                  completed: onboardingComplete && universities.length > 0,
+                  current: currentStage === 'DISCOVERING_UNIVERSITIES'
+                },
+                { 
+                  stage: 'shortlisting', 
+                  label: 'Shortlisting', 
+                  completed: universities.filter(u => u.shortlisted).length > 0,
+                  current: universities.filter(u => u.shortlisted).length > 0 && !universities.some(u => u.locked)
+                },
+                { 
+                  stage: 'locked', 
+                  label: 'Decision', 
+                  completed: universities.some(u => u.locked),
+                  current: universities.some(u => u.locked)
+                },
+                { 
+                  stage: 'application', 
+                  label: 'Application', 
+                  completed: false, // This would be updated when applications are submitted
+                  current: false // This would be updated when in application phase
+                }
               ].map((step, index) => (
                 <div key={step.stage} className="flex items-center flex-1">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step.completed
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
+                    step.completed
                       ? "bg-green-500 text-white"
-                      : currentStage === step.stage
+                      : step.current
                         ? "bg-indigo-600 text-white"
                         : "bg-gray-600 text-gray-300"
                     }`}>
                     {step.completed ? "✓" : index + 1}
                   </div>
                   {index < 4 && (
-                    <div className={`flex-1 h-1 mx-2 ${step.completed ? "bg-green-500" : "bg-gray-600"
-                      }`} />
+                    <div className={`flex-1 h-1 mx-2 ${
+                      step.completed ? "bg-green-500" : "bg-gray-600"
+                    }`} />
                   )}
                 </div>
               ))}

@@ -103,6 +103,8 @@ export default function Profile() {
       
       // Log what was actually set in formData
       console.log('=== FORM DATA SET ===');
+      console.log('ALL FormData keys:', Object.keys(formData));
+      console.log('Complete FormData object:', formData);
       console.log('FormData degree:', profile?.academic?.level);
       console.log('FormData subject:', profile?.academic?.major);
       console.log('FormData intendedDegree:', profile?.studyGoal?.degree);

@@ -348,6 +348,15 @@ function Universities() {
 
   // Filter and sort universities
   const filteredUniversities = universities.filter(university => {
+    console.log('=== UNIVERSITY DEBUG ===');
+    console.log('University name:', university.name);
+    console.log('University category:', university.category);
+    console.log('University universityType:', university.universityType);
+    console.log('University competitiveness:', university.competitiveness);
+    console.log('University location:', university.location);
+    console.log('University country:', university.country);
+    console.log('University program:', university.program);
+    
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (university.program && university.program.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (university.location && university.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -357,6 +366,13 @@ function Universities() {
       university.category === categoryFilter ||
       university.universityType === categoryFilter ||
       university.competitiveness === categoryFilter;
+
+    console.log('Search term:', searchTerm);
+    console.log('Category filter:', categoryFilter);
+    console.log('Matches search:', matchesSearch);
+    console.log('Matches category:', matchesCategory);
+    console.log('Will include:', matchesSearch && matchesCategory);
+    console.log('========================');
 
     return matchesSearch && matchesCategory;
   });
@@ -666,32 +682,33 @@ function Universities() {
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="appearance-none w-full px-4 py-4 pr-10 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 hover:border-white/30 cursor-pointer shadow-lg"
+                    className="appearance-none w-full px-5 py-4 pr-12 bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-600/50 rounded-2xl text-white text-sm font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-400/50 backdrop-blur-xl transition-all duration-300 hover:border-slate-500/50 hover:from-slate-800/95 hover:to-slate-900/95 cursor-pointer shadow-2xl hover:shadow-indigo-500/20"
                   >
-                    <option value="all" className="bg-gray-800 text-white">🎯 All Categories</option>
-                    <option value="DREAM" className="bg-gray-800 text-white">🔥 Dream Universities</option>
-                    <option value="TARGET" className="bg-gray-800 text-white">🎯 Target Universities</option>
-                    <option value="SAFE" className="bg-gray-800 text-white">✅ Safe Universities</option>
-                    <option value="HIGH" className="bg-gray-800 text-white">⚡ High Competition</option>
-                    <option value="MEDIUM" className="bg-gray-800 text-white">📊 Medium Competition</option>
-                    <option value="LOW" className="bg-gray-800 text-white">📈 Low Competition</option>
+                    <option value="all" className="bg-slate-900 text-white">🎯 All Categories</option>
+                    <option value="DREAM" className="bg-slate-900 text-white">🔥 Dream Universities</option>
+                    <option value="TARGET" className="bg-slate-900 text-white">🎯 Target Universities</option>
+                    <option value="SAFE" className="bg-slate-900 text-white">✅ Safe Universities</option>
                   </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <AdjustmentsHorizontalIcon className="w-5 h-5 text-gray-400" />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
                 </div>
                 <div className="relative">
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="appearance-none w-full px-4 py-4 pr-10 bg-gradient-to-r from-white/10 to-white/5 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent backdrop-blur-sm transition-all duration-200 hover:border-white/30 cursor-pointer shadow-lg"
+                    className="appearance-none w-full px-5 py-4 pr-12 bg-gradient-to-br from-slate-800/90 to-slate-900/90 border border-slate-600/50 rounded-2xl text-white text-sm font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-400/50 backdrop-blur-xl transition-all duration-300 hover:border-slate-500/50 hover:from-slate-800/95 hover:to-slate-900/95 cursor-pointer shadow-2xl hover:shadow-indigo-500/20"
                   >
-                    <option value="ranking" className="bg-gray-800 text-white">🏆 Sort by Ranking</option>
-                    <option value="name" className="bg-gray-800 text-white">🔤 Sort by Name</option>
-                    <option value="tuition" className="bg-gray-800 text-white">💰 Sort by Tuition</option>
+                    <option value="ranking" className="bg-slate-900 text-white">🏆 Sort by Ranking</option>
+                    <option value="name" className="bg-slate-900 text-white">🔤 Sort by Name</option>
+                    <option value="tuition" className="bg-slate-900 text-white">💰 Sort by Tuition</option>
                   </select>
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <ChartBarIcon className="w-5 h-5 text-gray-400" />
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                    <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </div>
                 </div>
               </div>

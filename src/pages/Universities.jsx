@@ -358,9 +358,9 @@ function Universities() {
       (university.country && university.country.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesCategory = categoryFilter === 'all' ||
-      university.category === categoryFilter ||
-      university.universityType === categoryFilter ||
-      university.competitiveness === categoryFilter;
+      university.category?.toLowerCase() === categoryFilter.toLowerCase() ||
+      university.universityType?.toLowerCase() === categoryFilter.toLowerCase() ||
+      university.competitiveness?.toLowerCase() === categoryFilter.toLowerCase();
 
     // Show debug for first few universities when category filter is not 'all'
     if (categoryFilter !== 'all' && universities.indexOf(university) < 5) {

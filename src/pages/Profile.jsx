@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { getMe, getTasks, getApplications, updateUser } from "../helpers/endpoints";
@@ -32,6 +32,7 @@ export default function Profile() {
   const [editing, setEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [formData, setFormData] = useState({});
+  const formDataRef = useRef({});
   const [uploadError, setUploadError] = useState("");
   const [uploadSuccess, setUploadSuccess] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
@@ -111,6 +112,8 @@ export default function Profile() {
       console.log('New FormData keys:', Object.keys(newFormData));
       console.log('New FormData object:', newFormData);
       
+      // Store in ref for immediate access
+      formDataRef.current = newFormData;
       setFormData(newFormData);
       
       // Log what was actually set in formData after state update
@@ -118,6 +121,7 @@ export default function Profile() {
         console.log('=== FORM DATA SET (DELAYED) ===');
         console.log('ALL FormData keys:', Object.keys(formData));
         console.log('Complete FormData object:', formData);
+        console.log('FormDataRef current:', formDataRef.current);
       }, 100);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
@@ -129,48 +133,49 @@ export default function Profile() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Get current form values directly from the form state
+      // Get current form values from ref for immediate access
+      const currentFormData = formDataRef.current;
       console.log('=== SAVE DEBUG ===');
-      console.log('Current formData state:', formData);
-      console.log('FormData keys at save:', Object.keys(formData));
+      console.log('Current formDataRef state:', currentFormData);
+      console.log('FormDataRef keys at save:', Object.keys(currentFormData));
       
       // Convert flat formData to nested structure for backend - INCLUDE ALL FIELDS
       const nestedFormData = {
-        name: formData.name,
-        email: formData.email,
-        bio: formData.bio,
+        name: currentFormData.name,
+        email: currentFormData.email,
+        bio: currentFormData.bio,
         // Academic Background - ALL FIELDS
-        degree: formData.degree,
-        subject: formData.subject,
-        university: formData.university,
-        graduationYear: formData.graduationYear,
-        gpa: formData.gpa,
+        degree: currentFormData.degree,
+        subject: currentFormData.subject,
+        university: currentFormData.university,
+        graduationYear: currentFormData.graduationYear,
+        gpa: currentFormData.gpa,
         // Study Goal - ALL FIELDS
-        intendedDegree: formData.intendedDegree,
-        fieldOfStudy: formData.fieldOfStudy,
-        intakeYear: formData.intakeYear,
-        preferredCountries: formData.preferredCountries,
+        intendedDegree: currentFormData.intendedDegree,
+        fieldOfStudy: currentFormData.fieldOfStudy,
+        intakeYear: currentFormData.intakeYear,
+        preferredCountries: currentFormData.preferredCountries,
         // Budget - ALL FIELDS
-        budgetRange: formData.budgetRange,
-        fundingPlan: formData.fundingPlan,
+        budgetRange: currentFormData.budgetRange,
+        fundingPlan: currentFormData.fundingPlan,
         // Standardized Tests - ALL FIELDS
-        ieltsTaken: formData.ieltsTaken,
-        ieltsScore: formData.ieltsScore,
-        toeflTaken: formData.toeflTaken,
-        toeflScore: formData.toeflScore,
-        greTaken: formData.greTaken,
-        greScore: formData.greScore,
-        gmatTaken: formData.gmatTaken,
-        gmatScore: formData.gmatScore,
+        ieltsTaken: currentFormData.ieltsTaken,
+        ieltsScore: currentFormData.ieltsScore,
+        toeflTaken: currentFormData.toeflTaken,
+        toeflScore: currentFormData.toeflScore,
+        greTaken: currentFormData.greTaken,
+        greScore: currentFormData.greScore,
+        gmatTaken: currentFormData.gmatTaken,
+        gmatScore: currentFormData.gmatScore,
         // Additional Academic Info - ALL FIELDS
-        workExperience: formData.workExperience,
-        researchExperience: formData.researchExperience,
-        publications: formData.publications,
-        certifications: formData.certifications,
+        workExperience: currentFormData.workExperience,
+        researchExperience: currentFormData.researchExperience,
+        publications: currentFormData.publications,
+        certifications: currentFormData.certifications,
         // Application Readiness - ALL FIELDS
-        sopStatus: formData.sopStatus,
-        lorStatus: formData.lorStatus,
-        resumeStatus: formData.resumeStatus
+        sopStatus: currentFormData.sopStatus,
+        lorStatus: currentFormData.lorStatus,
+        resumeStatus: currentFormData.resumeStatus
       };
       
       console.log('Sending to backend:', nestedFormData);

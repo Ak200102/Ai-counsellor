@@ -1,46 +1,35 @@
-import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Navigate } from "react-router-dom";
-import api from "../helpers/api";
+import { useEffect } from "react";
+import { fetchSession } from "../redux/sessionSlice";
 
 export default function ProtectedRoute({ children }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const dispatch = useDispatch();
+  const { token, user, isLoading, error } = useSelector((state) => state.session);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem("token");
-      console.log("ProtectedRoute: Checking auth, token exists:", !!token);
-      
-      // If no token, redirect to landing
-      if (!token) {
-        console.log("ProtectedRoute: No token found, redirecting to landing");
-        setIsLoading(false);
-        setIsAuthenticated(false);
-        return;
-      }
+    console.log("ProtectedRoute: useEffect triggered");
+    console.log("ProtectedRoute: token:", !!token);
+    console.log("ProtectedRoute: user:", !!user);
+    console.log("ProtectedRoute: isLoading:", isLoading);
+    console.log("ProtectedRoute: error:", error);
+    
+    // If no token, redirect to landing
+    if (!token) {
+      console.log("ProtectedRoute: No token found, redirecting to landing");
+      return;
+    }
 
-      // If token exists, assume authenticated for now
-      // The API interceptor will handle token validation
-      console.log("ProtectedRoute: Token found, allowing access");
-      setIsAuthenticated(true);
-      setIsLoading(false);
-
-      // Optionally validate token in background
-      try {
-        console.log("ProtectedRoute: Validating token in background");
-        await api.get("/api/user/me");
-        console.log("ProtectedRoute: Token validation successful");
-      } catch (error) {
-        console.log("ProtectedRoute: Token validation failed in background:", error.response?.status);
-        // Token is invalid, but we'll let the API interceptor handle the redirect
-      }
-    };
-
-    checkAuth();
-  }, []);
+    // If we have token but no user data and not currently loading, fetch session
+    if (token && !user && !isLoading) {
+      console.log("ProtectedRoute: Token exists but no user data, fetching session");
+      dispatch(fetchSession());
+    }
+  }, [token, user, isLoading, error, dispatch]);
 
   // Show loading spinner while checking auth
-  if (isLoading) {
+  if (token && !user && isLoading) {
+    console.log("ProtectedRoute: Showing loading spinner");
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -52,10 +41,12 @@ export default function ProtectedRoute({ children }) {
   }
 
   // If not authenticated, redirect to landing page
-  if (!isAuthenticated) {
+  if (!token) {
+    console.log("ProtectedRoute: No token, redirecting to landing");
     return <Navigate to="/" replace />;
   }
 
   // If authenticated, render the protected content
+  console.log("ProtectedRoute: Authenticated, rendering children");
   return children;
 }

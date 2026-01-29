@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { motion } from "framer-motion";
 import {
   AcademicCapIcon,
@@ -14,6 +15,7 @@ import {
 
 export default function Landing() {
   const navigate = useNavigate();
+  const { token } = useSelector((state) => state.session);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   const testimonials = [
@@ -37,12 +39,19 @@ export default function Landing() {
     }
   ];
 
+  // Check if user is already authenticated and redirect to dashboard
   useEffect(() => {
+    if (token) {
+      console.log("Landing: User already authenticated, redirecting to dashboard");
+      navigate("/dashboard", { replace: true });
+      return;
+    }
+
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [token, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900">

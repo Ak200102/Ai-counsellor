@@ -8,6 +8,11 @@ import App from "./App.jsx";
 import { store } from "./redux/store.js";
 import "./index.css";
 
+// Debug localStorage on app load
+console.log("main.jsx: App loading...");
+console.log("main.jsx: localStorage token exists:", !!localStorage.getItem("token"));
+console.log("main.jsx: localStorage contents:", Object.keys(localStorage));
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <DarkModeProvider>

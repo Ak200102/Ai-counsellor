@@ -1,11 +1,13 @@
 import axios from "axios";
+import store from "../redux/store";
+import { clearSession } from "../redux/sessionSlice";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
+  const token = store.getState().session.token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -16,13 +18,19 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle 401 Unauthorized errors
+    // Handle 401 Unauthorized errors only for user-initiated actions
     if (error.response?.status === 401 || error.response?.status === 403) {
-      console.log("Authentication error detected, clearing token and redirecting to landing");
-      localStorage.removeItem("token");
-      
-      // Redirect to landing page
-      window.location.href = "/";
+      if (error.response.data.error === 'Unauthorized') {
+        console.log("Authentication error detected, clearing session");
+        store.dispatch(clearSession());
+        
+        // Only redirect if this is not a background validation request
+        // Check if the request URL is not /api/user/me (used for validation)
+        if (!error.config.url.includes('/api/user/me')) {
+          console.log("User action failed, redirecting to landing page");
+          window.location.href = "/";
+        }
+      }
     }
     return Promise.reject(error);
   }

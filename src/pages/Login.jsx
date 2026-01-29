@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useDarkMode } from "../contexts/DarkModeContext";
 import { login } from "../helpers/endpoints";
+import { setToken } from "../redux/sessionSlice";
 import {
   AcademicCapIcon,
   EnvelopeIcon,
@@ -22,6 +24,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const { darkMode } = useDarkMode();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setFormData(prev => ({
@@ -37,7 +40,12 @@ export default function Login() {
 
     try {
       const response = await login(formData);
-      localStorage.setItem("token", response.data.token);
+      const token = response.data.token;
+      
+      // Use Redux to set token
+      dispatch(setToken(token));
+      
+      console.log("Login: Token set in Redux:", token);
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");

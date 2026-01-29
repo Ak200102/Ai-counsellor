@@ -4,3 +4,5 @@ import session from "./sessionSlice";
 export const store = configureStore({
   reducer: { session },
 });
+
+export default store;

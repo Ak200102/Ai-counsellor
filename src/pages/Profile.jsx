@@ -77,7 +77,7 @@ export default function Profile() {
         intendedDegree: profile?.intendedDegree || "",
         fieldOfStudy: profile?.fieldOfStudy || "",
         intakeYear: profile?.intakeYear || "",
-        preferredCountries: profile?.preferredCountries?.join(', ') || "",
+        preferredCountries: profile?.preferredCountries || [],
         // Budget (matching onboarding structure)
         budgetRange: profile?.budgetRange || "",
         fundingPlan: profile?.fundingPlan || "",
@@ -270,7 +270,7 @@ export default function Profile() {
       intendedDegree: profile?.intendedDegree || "",
       fieldOfStudy: profile?.fieldOfStudy || "",
       intakeYear: profile?.intakeYear || "",
-      preferredCountries: profile?.preferredCountries?.join(', ') || "",
+      preferredCountries: profile?.preferredCountries || [],
       // Budget (matching onboarding structure)
       budgetRange: profile?.budgetRange || "",
       fundingPlan: profile?.fundingPlan || "",
@@ -691,217 +691,411 @@ export default function Profile() {
                 </div>
               </div>
 
-              {/* Career Goals Section */}
+              {/* Academic Background Section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Career Goals & Aspirations</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Academic Background</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Short-term Goals</label>
-                    <textarea
-                      value={formData.shortTermGoals}
-                      onChange={(e) => setFormData(prev => ({ ...prev, shortTermGoals: e.target.value }))}
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Current Degree Level</label>
+                    <select
+                      value={formData.degree}
+                      onChange={(e) => setFormData(prev => ({ ...prev, degree: e.target.value }))}
                       disabled={!editing}
-                      rows={3}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="What are your immediate career goals?"
-                    />
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select degree</option>
+                      <option value="high-school">High School</option>
+                      <option value="bachelors">Bachelor's</option>
+                      <option value="masters">Master's</option>
+                      <option value="phd">PhD</option>
+                      <option value="other">Other</option>
+                    </select>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Long-term Goals</label>
-                    <textarea
-                      value={formData.longTermGoals}
-                      onChange={(e) => setFormData(prev => ({ ...prev, longTermGoals: e.target.value }))}
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Major/Subject</label>
+                    <input
+                      type="text"
+                      value={formData.subject}
+                      onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
                       disabled={!editing}
-                      rows={3}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Where do you see yourself in 5-10 years?"
+                      placeholder="e.g., Computer Science, Mechanical Engineering"
                     />
                   </div>
                 </div>
 
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Current/Previous University</label>
+                  <input
+                    type="text"
+                    value={formData.university}
+                    onChange={(e) => setFormData(prev => ({ ...prev, university: e.target.value }))}
+                    disabled={!editing}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="e.g., Massachusetts Institute of Technology"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">GPA/Grade</label>
+                    <input
+                      type="text"
+                      value={formData.gpa}
+                      onChange={(e) => setFormData(prev => ({ ...prev, gpa: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 3.8/4.0 or 85%"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Graduation Year</label>
+                    <input
+                      type="number"
+                      value={formData.graduationYear}
+                      onChange={(e) => setFormData(prev => ({ ...prev, graduationYear: e.target.value }))}
+                      disabled={!editing}
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., 2024"
+                      min="2020"
+                      max="2030"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Study Goal Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Study Goals</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Intended Degree</label>
+                  <select
+                    value={formData.intendedDegree}
+                    onChange={(e) => setFormData(prev => ({ ...prev, intendedDegree: e.target.value }))}
+                    disabled={!editing}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select degree</option>
+                    <option value="bachelors">Bachelor's</option>
+                    <option value="masters">Master's</option>
+                    <option value="phd">PhD</option>
+                    <option value="diploma">Diploma</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Field of Study</label>
+                  <input
+                    type="text"
+                    value={formData.fieldOfStudy}
+                    onChange={(e) => setFormData(prev => ({ ...prev, fieldOfStudy: e.target.value }))}
+                    disabled={!editing}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="e.g., Data Science, Engineering"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Intake Year</label>
+                  <select
+                    value={formData.intakeYear}
+                    onChange={(e) => setFormData(prev => ({ ...prev, intakeYear: e.target.value }))}
+                    disabled={!editing}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">Select year</option>
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026">2026</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Preferred Countries</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                    {["USA", "UK", "Canada", "Australia", "Germany", "Singapore"].map((country) => (
+                      <label key={country} className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.preferredCountries.includes(country)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData(prev => ({ ...prev, preferredCountries: [...prev.preferredCountries, country] }));
+                            } else {
+                              setFormData(prev => ({ ...prev, preferredCountries: prev.preferredCountries.filter(c => c !== country) }));
+                            }
+                          }}
+                          disabled={!editing}
+                          className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                        />
+                        <span className="text-white text-sm">{country}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Budget Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Budget & Funding</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Budget Range</label>
+                  <input
+                    type="text"
+                    value={formData.budgetRange}
+                    onChange={(e) => setFormData(prev => ({ ...prev, budgetRange: e.target.value }))}
+                    disabled={!editing}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="e.g., $20,000 - $30,000 per year"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Funding Plan</label>
+                  <textarea
+                    value={formData.fundingPlan}
+                    onChange={(e) => setFormData(prev => ({ ...prev, fundingPlan: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Describe your funding sources (scholarships, loans, personal funds, etc.)"
+                  />
+                </div>
+              </div>
+
+              {/* Standardized Tests Section */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Standardized Tests</h3>
+                
+                <div className="space-y-6">
+                  {/* IELTS */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.ieltsTaken}
+                        onChange={(e) => setFormData(prev => ({ ...prev, ieltsTaken: e.target.checked }))}
+                        disabled={!editing}
+                        className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <label className="text-white font-medium">IELTS Taken</label>
+                    </div>
+                    
+                    {formData.ieltsTaken && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Overall Score</label>
+                          <input
+                            type="text"
+                            value={formData.ieltsScore}
+                            onChange={(e) => setFormData(prev => ({ ...prev, ieltsScore: e.target.value }))}
+                            disabled={!editing}
+                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., 7.5"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* TOEFL */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.toeflTaken}
+                        onChange={(e) => setFormData(prev => ({ ...prev, toeflTaken: e.target.checked }))}
+                        disabled={!editing}
+                        className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <label className="text-white font-medium">TOEFL Taken</label>
+                    </div>
+                    
+                    {formData.toeflTaken && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
+                          <input
+                            type="text"
+                            value={formData.toeflScore}
+                            onChange={(e) => setFormData(prev => ({ ...prev, toeflScore: e.target.value }))}
+                            disabled={!editing}
+                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., 100"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* GRE */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.greTaken}
+                        onChange={(e) => setFormData(prev => ({ ...prev, greTaken: e.target.checked }))}
+                        disabled={!editing}
+                        className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <label className="text-white font-medium">GRE Taken</label>
+                    </div>
+                    
+                    {formData.greTaken && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
+                          <input
+                            type="text"
+                            value={formData.greScore}
+                            onChange={(e) => setFormData(prev => ({ ...prev, greScore: e.target.value }))}
+                            disabled={!editing}
+                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., 320"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* GMAT */}
+                  <div>
+                    <div className="flex items-center space-x-3 mb-3">
+                      <input
+                        type="checkbox"
+                        checked={formData.gmatTaken}
+                        onChange={(e) => setFormData(prev => ({ ...prev, gmatTaken: e.target.checked }))}
+                        disabled={!editing}
+                        className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      />
+                      <label className="text-white font-medium">GMAT Taken</label>
+                    </div>
+                    
+                    {formData.gmatTaken && (
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
+                          <input
+                            type="text"
+                            value={formData.gmatScore}
+                            onChange={(e) => setFormData(prev => ({ ...prev, gmatScore: e.target.value }))}
+                            disabled={!editing}
+                            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., 700"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Additional Academic Info */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Additional Academic Information</h3>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Work Experience</label>
+                  <textarea
+                    value={formData.workExperience}
+                    onChange={(e) => setFormData(prev => ({ ...prev, workExperience: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Describe your relevant work experience"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Research Experience</label>
+                  <textarea
+                    value={formData.researchExperience}
+                    onChange={(e) => setFormData(prev => ({ ...prev, researchExperience: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Describe your research experience and publications"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Publications</label>
+                  <textarea
+                    value={formData.publications}
+                    onChange={(e) => setFormData(prev => ({ ...prev, publications: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="List your publications (if any)"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Certifications</label>
+                  <textarea
+                    value={formData.certifications}
+                    onChange={(e) => setFormData(prev => ({ ...prev, certifications: e.target.value }))}
+                    disabled={!editing}
+                    rows={3}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="List your relevant certifications"
+                  />
+                </div>
+              </div>
+
+              {/* Application Readiness */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-white mb-4">Application Readiness</h3>
+                
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Industry Interest</label>
-                    <input
-                      type="text"
-                      value={formData.industryInterest}
-                      onChange={(e) => setFormData(prev => ({ ...prev, industryInterest: e.target.value }))}
+                    <label className="block text-sm font-medium text-gray-300 mb-2">SOP Status</label>
+                    <select
+                      value={formData.sopStatus}
+                      onChange={(e) => setFormData(prev => ({ ...prev, sopStatus: e.target.value }))}
                       disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., Technology, Finance, Healthcare"
-                    />
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select status</option>
+                      <option value="not-started">Not Started</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Job Role Aspirations</label>
-                    <input
-                      type="text"
-                      value={formData.jobRoleAspirations}
-                      onChange={(e) => setFormData(prev => ({ ...prev, jobRoleAspirations: e.target.value }))}
+                    <label className="block text-sm font-medium text-gray-300 mb-2">LOR Status</label>
+                    <select
+                      value={formData.lorStatus}
+                      onChange={(e) => setFormData(prev => ({ ...prev, lorStatus: e.target.value }))}
                       disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., Software Engineer, Data Scientist"
-                    />
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select status</option>
+                      <option value="not-started">Not Started</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Career Aspirations</label>
-                    <input
-                      type="text"
-                      value={formData.careerAspirations}
-                      onChange={(e) => setFormData(prev => ({ ...prev, careerAspirations: e.target.value }))}
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Resume Status</label>
+                    <select
+                      value={formData.resumeStatus}
+                      onChange={(e) => setFormData(prev => ({ ...prev, resumeStatus: e.target.value }))}
                       disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Your dream career position"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Experience Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Work Experience</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Years of Experience</label>
-                    <input
-                      type="text"
-                      value={formData.workExperienceYears}
-                      onChange={(e) => setFormData(prev => ({ ...prev, workExperienceYears: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 2 years, 6 months"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Company</label>
-                    <input
-                      type="text"
-                      value={formData.company}
-                      onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Current or most recent company"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Skills Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Skills & Expertise</h3>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Technical Skills</label>
-                  <textarea
-                    value={formData.technicalSkills}
-                    onChange={(e) => setFormData(prev => ({ ...prev, technicalSkills: e.target.value }))}
-                    disabled={!editing}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="e.g., Python, JavaScript, React, Machine Learning (comma-separated)"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">All Skills</label>
-                  <textarea
-                    value={formData.allSkills}
-                    onChange={(e) => setFormData(prev => ({ ...prev, allSkills: e.target.value }))}
-                    disabled={!editing}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Include soft skills, languages, certifications (comma-separated)"
-                  />
-                </div>
-              </div>
-
-              {/* Exam Scores Section */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Exam Scores</h3>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">IELTS Score</label>
-                    <input
-                      type="text"
-                      value={formData.ieltsScore}
-                      onChange={(e) => setFormData(prev => ({ ...prev, ieltsScore: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 7.5"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">GRE Score</label>
-                    <input
-                      type="text"
-                      value={formData.greScore}
-                      onChange={(e) => setFormData(prev => ({ ...prev, greScore: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 320"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">TOEFL Score</label>
-                    <input
-                      type="text"
-                      value={formData.toeflScore}
-                      onChange={(e) => setFormData(prev => ({ ...prev, toeflScore: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 100"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">SAT Score</label>
-                    <input
-                      type="text"
-                      value={formData.satScore}
-                      onChange={(e) => setFormData(prev => ({ ...prev, satScore: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., 1400"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Additional Details */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white mb-4">Additional Preferences</h3>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Preferred Countries</label>
-                    <textarea
-                      value={formData.preferredCountries}
-                      onChange={(e) => setFormData(prev => ({ ...prev, preferredCountries: e.target.value }))}
-                      disabled={!editing}
-                      rows={3}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., USA, Canada, UK, Australia (comma-separated)"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Annual Budget</label>
-                    <input
-                      type="text"
-                      value={formData.annualBudget}
-                      onChange={(e) => setFormData(prev => ({ ...prev, annualBudget: e.target.value }))}
-                      disabled={!editing}
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., $30,000"
-                    />
+                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select status</option>
+                      <option value="not-started">Not Started</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="completed">Completed</option>
+                    </select>
                   </div>
                 </div>
               </div>

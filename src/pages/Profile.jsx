@@ -119,9 +119,16 @@ export default function Profile() {
       console.log('New FormData keys:', Object.keys(newFormData));
       console.log('New FormData object:', newFormData);
       
-      // Store in ref for immediate access AND update state for reactivity
+      // Store in ref for immediate access
       formDataRef.current = newFormData;
+      
+      // Set state with a callback to ensure proper update
       setFormData(newFormData);
+      
+      // Force state update if needed
+      setTimeout(() => {
+        setFormData(prev => ({ ...prev, ...newFormData }));
+      }, 50);
       
       console.log('=== FORM DATA LOADED ===');
       console.log('FormDataRef current after load:', formDataRef.current);
@@ -320,6 +327,14 @@ export default function Profile() {
     } finally {
       setUploadingAvatar(false);
     }
+  };
+
+  const getCurrentFormData = () => {
+    // Return ref data if state is empty, otherwise return state
+    if (Object.keys(formData).length === 0) {
+      return formDataRef.current;
+    }
+    return formData;
   };
 
   const updateFormData = (field, value) => {
@@ -674,7 +689,7 @@ export default function Profile() {
                   </div>
                   <input
                     type="text"
-                    value={formData.name}
+                    value={getCurrentFormData().name || ""}
                     onChange={(e) => updateFormData('name', e.target.value)}
                     disabled={!editing}
                     className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -689,7 +704,7 @@ export default function Profile() {
                   </div>
                   <input
                     type="email"
-                    value={formData.email}
+                    value={getCurrentFormData().email || ""}
                     onChange={(e) => updateFormData('email', e.target.value)}
                     disabled={!editing}
                     className="w-full pl-10 pr-3 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -699,7 +714,7 @@ export default function Profile() {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Bio</label>
                 <textarea
-                  value={formData.bio}
+                  value={getCurrentFormData().bio || ""}
                   onChange={(e) => updateFormData('bio', e.target.value)}
                   disabled={!editing}
                   rows={4}
@@ -728,7 +743,7 @@ export default function Profile() {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Current Degree Level</label>
                     <select
-                      value={formData.degree}
+                      value={getCurrentFormData().degree || ""}
                       onChange={(e) => updateFormData('degree', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -746,7 +761,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Major/Subject</label>
                     <input
                       type="text"
-                      value={formData.subject}
+                      value={getCurrentFormData().subject || ""}
                       onChange={(e) => updateFormData('subject', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -759,7 +774,7 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Current/Previous University</label>
                   <input
                     type="text"
-                    value={formData.university}
+                    value={getCurrentFormData().university || ""}
                     onChange={(e) => updateFormData('university', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -772,7 +787,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">GPA/Grade</label>
                     <input
                       type="text"
-                      value={formData.gpa}
+                      value={getCurrentFormData().gpa || ""}
                       onChange={(e) => updateFormData('gpa', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -784,7 +799,7 @@ export default function Profile() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Graduation Year</label>
                     <input
                       type="number"
-                      value={formData.graduationYear}
+                      value={getCurrentFormData().graduationYear || ""}
                       onChange={(e) => updateFormData('graduationYear', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -803,7 +818,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Intended Degree</label>
                   <select
-                    value={formData.intendedDegree}
+                    value={getCurrentFormData().intendedDegree || ""}
                     onChange={(e) => updateFormData('intendedDegree', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -820,7 +835,7 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Field of Study</label>
                   <input
                     type="text"
-                    value={formData.fieldOfStudy}
+                    value={getCurrentFormData().fieldOfStudy || ""}
                     onChange={(e) => updateFormData('fieldOfStudy', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -831,7 +846,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Intake Year</label>
                   <select
-                    value={formData.intakeYear}
+                    value={getCurrentFormData().intakeYear || ""}
                     onChange={(e) => updateFormData('intakeYear', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -850,12 +865,13 @@ export default function Profile() {
                       <label key={country} className="flex items-center space-x-2 cursor-pointer">
                         <input
                           type="checkbox"
-                          checked={formData.preferredCountries.includes(country)}
+                          checked={getCurrentFormData().preferredCountries?.includes(country) || false}
                           onChange={(e) => {
+                            const currentCountries = getCurrentFormData().preferredCountries || [];
                             if (e.target.checked) {
-                              updateFormData('preferredCountries', [...formData.preferredCountries, country]);
+                              updateFormData('preferredCountries', [...currentCountries, country]);
                             } else {
-                              updateFormData('preferredCountries', formData.preferredCountries.filter(c => c !== country));
+                              updateFormData('preferredCountries', currentCountries.filter(c => c !== country));
                             }
                           }}
                           disabled={!editing}
@@ -876,7 +892,7 @@ export default function Profile() {
                   <label className="block text-sm font-medium text-gray-300 mb-2">Budget Range</label>
                   <input
                     type="text"
-                    value={formData.budgetRange}
+                    value={getCurrentFormData().budgetRange || ""}
                     onChange={(e) => updateFormData('budgetRange', e.target.value)}
                     disabled={!editing}
                     className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -887,7 +903,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Funding Plan</label>
                   <textarea
-                    value={formData.fundingPlan}
+                    value={getCurrentFormData().fundingPlan || ""}
                     onChange={(e) => updateFormData('fundingPlan', e.target.value)}
                     disabled={!editing}
                     rows={3}
@@ -907,7 +923,7 @@ export default function Profile() {
                     <div className="flex items-center space-x-3 mb-3">
                       <input
                         type="checkbox"
-                        checked={formData.ieltsTaken}
+                        checked={getCurrentFormData().ieltsTaken || false}
                         onChange={(e) => updateFormData('ieltsTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -915,13 +931,13 @@ export default function Profile() {
                       <label className="text-white font-medium">IELTS Taken</label>
                     </div>
                     
-                    {formData.ieltsTaken && (
+                    {getCurrentFormData().ieltsTaken && (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">Overall Score</label>
                           <input
                             type="text"
-                            value={formData.ieltsScore}
+                            value={getCurrentFormData().ieltsScore || ""}
                             onChange={(e) => updateFormData('ieltsScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -937,7 +953,7 @@ export default function Profile() {
                     <div className="flex items-center space-x-3 mb-3">
                       <input
                         type="checkbox"
-                        checked={formData.toeflTaken}
+                        checked={getCurrentFormData().toeflTaken || false}
                         onChange={(e) => updateFormData('toeflTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -945,13 +961,13 @@ export default function Profile() {
                       <label className="text-white font-medium">TOEFL Taken</label>
                     </div>
                     
-                    {formData.toeflTaken && (
+                    {getCurrentFormData().toeflTaken && (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
                           <input
                             type="text"
-                            value={formData.toeflScore}
+                            value={getCurrentFormData().toeflScore || ""}
                             onChange={(e) => updateFormData('toeflScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -967,7 +983,7 @@ export default function Profile() {
                     <div className="flex items-center space-x-3 mb-3">
                       <input
                         type="checkbox"
-                        checked={formData.greTaken}
+                        checked={getCurrentFormData().greTaken || false}
                         onChange={(e) => updateFormData('greTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -975,13 +991,13 @@ export default function Profile() {
                       <label className="text-white font-medium">GRE Taken</label>
                     </div>
                     
-                    {formData.greTaken && (
+                    {getCurrentFormData().greTaken && (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
                           <input
                             type="text"
-                            value={formData.greScore}
+                            value={getCurrentFormData().greScore || ""}
                             onChange={(e) => updateFormData('greScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -997,7 +1013,7 @@ export default function Profile() {
                     <div className="flex items-center space-x-3 mb-3">
                       <input
                         type="checkbox"
-                        checked={formData.gmatTaken}
+                        checked={getCurrentFormData().gmatTaken || false}
                         onChange={(e) => updateFormData('gmatTaken', e.target.checked)}
                         disabled={!editing}
                         className="w-4 h-4 text-blue-600 bg-white/10 border-white/20 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -1005,13 +1021,13 @@ export default function Profile() {
                       <label className="text-white font-medium">GMAT Taken</label>
                     </div>
                     
-                    {formData.gmatTaken && (
+                    {getCurrentFormData().gmatTaken && (
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div>
                           <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
                           <input
                             type="text"
-                            value={formData.gmatScore}
+                            value={getCurrentFormData().gmatScore || ""}
                             onChange={(e) => updateFormData('gmatScore', e.target.value)}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -1031,7 +1047,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Work Experience</label>
                   <textarea
-                    value={formData.workExperience}
+                    value={getCurrentFormData().workExperience || ""}
                     onChange={(e) => updateFormData('workExperience', e.target.value)}
                     disabled={!editing}
                     rows={3}
@@ -1043,7 +1059,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Research Experience</label>
                   <textarea
-                    value={formData.researchExperience}
+                    value={getCurrentFormData().researchExperience || ""}
                     onChange={(e) => updateFormData('researchExperience', e.target.value)}
                     disabled={!editing}
                     rows={3}
@@ -1055,7 +1071,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Publications</label>
                   <textarea
-                    value={formData.publications}
+                    value={getCurrentFormData().publications || ""}
                     onChange={(e) => updateFormData('publications', e.target.value)}
                     disabled={!editing}
                     rows={3}
@@ -1067,7 +1083,7 @@ export default function Profile() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Certifications</label>
                   <textarea
-                    value={formData.certifications}
+                    value={getCurrentFormData().certifications || ""}
                     onChange={(e) => updateFormData('certifications', e.target.value)}
                     disabled={!editing}
                     rows={3}
@@ -1085,7 +1101,7 @@ export default function Profile() {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">SOP Status</label>
                     <select
-                      value={formData.sopStatus}
+                      value={getCurrentFormData().sopStatus || ""}
                       onChange={(e) => updateFormData('sopStatus', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -1100,7 +1116,7 @@ export default function Profile() {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">LOR Status</label>
                     <select
-                      value={formData.lorStatus}
+                      value={getCurrentFormData().lorStatus || ""}
                       onChange={(e) => updateFormData('lorStatus', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -1115,7 +1131,7 @@ export default function Profile() {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Resume Status</label>
                     <select
-                      value={formData.resumeStatus}
+                      value={getCurrentFormData().resumeStatus || ""}
                       onChange={(e) => updateFormData('resumeStatus', e.target.value)}
                       disabled={!editing}
                       className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"

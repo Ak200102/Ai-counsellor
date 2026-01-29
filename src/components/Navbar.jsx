@@ -303,7 +303,9 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-700"
+            className="md:hidden fixed top-16 left-0 right-0
+             bg-gray-900 border-t border-gray-700
+             z-[9999] pointer-events-auto"
           >
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item) => {

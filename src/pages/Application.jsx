@@ -322,7 +322,7 @@ export default function Application() {
       
       <div className="relative z-10">
         {/* Header */}
-        <div className="bg-white/10 backdrop-blur-lg border-b border-white/20">
+        <div className="bg-white/10 backdrop-blur-lg border-b border-white/20 z-0">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center gap-3">

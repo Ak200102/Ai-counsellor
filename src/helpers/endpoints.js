@@ -13,6 +13,16 @@ export const resetPassword = (data) => api.post("/api/auth/reset-password", data
 export const getMe = () => api.get("/api/user/me");
 export const onboarding = (data) => api.post("/api/user/onboarding", data);
 export const updateUser = (data) => api.put("/api/user/me", data);
+export const uploadAvatar = (file) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  return api.post("/api/user/avatar-upload", formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+export const removeAvatar = () => api.delete("/api/user/remove-avatar");
 export const logout = () => api.post("/api/auth/logout");
 
 // Check AI counselling status

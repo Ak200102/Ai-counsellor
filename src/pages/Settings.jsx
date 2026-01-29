@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useDarkMode } from "../contexts/DarkModeContext";
-import { getMe, getSettings, updateProfileSettings, updateNotificationSettings, updatePrivacySettings, updateAppearanceSettings, logoutAllDevices, deleteAccount } from "../helpers/endpoints";
+import { getMe, getSettings, updateProfileSettings, updateNotificationSettings, updatePrivacySettings, logoutAllDevices, deleteAccount, uploadAvatar, removeAvatar } from "../helpers/endpoints";
 import {
   Cog6ToothIcon,
   BellIcon,
@@ -21,9 +21,11 @@ export default function Settings() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // "success" or "error"
+  const fileInputRef = useRef(null);
   const [profileForm, setProfileForm] = useState({
     name: '',
     email: '',
@@ -39,10 +41,6 @@ export default function Settings() {
     profileVisibility: "public",
     showEmail: false,
     showProgress: true
-  });
-  const [appearance, setAppearance] = useState({
-    theme: "light",
-    language: "en"
   });
   const { darkMode, toggleDarkMode } = useDarkMode();
   const navigate = useNavigate();
@@ -82,10 +80,6 @@ export default function Settings() {
         showEmail: false,
         showProgress: true
       });
-      setAppearance(settings.appearance || {
-        theme: "light",
-        language: "en"
-      });
     } catch (err) {
       console.error("Failed to load settings:", err);
     } finally {
@@ -96,6 +90,62 @@ export default function Settings() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/auth/login");
+  };
+
+  const handleAvatarUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setMessage("Please select an image file");
+      setMessageType("error");
+      setTimeout(() => setMessage(""), 3000);
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage("File size must be less than 5MB");
+      setMessageType("error");
+      setTimeout(() => setMessage(""), 3000);
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const response = await uploadAvatar(file);
+      await fetchUserData(); // Refresh user data
+      setMessage("Avatar updated successfully!");
+      setMessageType("success");
+      setTimeout(() => setMessage(""), 3000);
+    } catch (err) {
+      console.error("Failed to upload avatar:", err);
+      setMessage("Failed to upload avatar. Please try again.");
+      setMessageType("error");
+      setTimeout(() => setMessage(""), 3000);
+    } finally {
+      setUploadingAvatar(false);
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleRemoveAvatar = async () => {
+    try {
+      await removeAvatar();
+      await fetchUserData(); // Refresh user data
+      setMessage("Avatar removed successfully!");
+      setMessageType("success");
+      setTimeout(() => setMessage(""), 3000);
+    } catch (err) {
+      console.error("Failed to remove avatar:", err);
+      setMessage("Failed to remove avatar. Please try again.");
+      setMessageType("error");
+      setTimeout(() => setMessage(""), 3000);
+    }
   };
 
   const handleSaveProfile = async () => {
@@ -156,25 +206,6 @@ export default function Settings() {
     }
   };
 
-  const handleSaveAppearance = async () => {
-    setSaving(true);
-    try {
-      console.log("Saving appearance settings to MongoDB:", appearance);
-      await updateAppearanceSettings(appearance);
-      console.log("Appearance settings saved successfully to MongoDB");
-      setMessage("Appearance settings updated successfully in database!");
-      setMessageType("success");
-      setTimeout(() => setMessage(""), 3000);
-    } catch (err) {
-      console.error("Failed to update appearance:", err);
-      setMessage("Failed to update appearance settings. Please try again.");
-      setMessageType("error");
-      setTimeout(() => setMessage(""), 3000);
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const handleLogoutAllDevices = async () => {
     if (window.confirm("Are you sure you want to logout from all devices?")) {
       try {
@@ -224,7 +255,6 @@ export default function Settings() {
     { id: "profile", name: "Profile", icon: UserCircleIcon },
     { id: "notifications", name: "Notifications", icon: BellIcon },
     { id: "privacy", name: "Privacy", icon: ShieldCheckIcon },
-    { id: "appearance", name: "Appearance", icon: GlobeAltIcon },
     { id: "danger", name: "Danger Zone", icon: ExclamationTriangleIcon }
   ];
 
@@ -312,10 +342,27 @@ export default function Settings() {
                 
                 <div className="space-y-6">
                   <div className="flex items-center space-x-4">
-                    <div className="h-20 w-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                      <span className="text-white text-2xl font-medium">
-                        {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </span>
+                    <div className="relative">
+                      {user?.avatar ? (
+                        <img 
+                          src={user.avatar} 
+                          alt="Profile" 
+                          className="h-20 w-20 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                          <span className="text-white text-2xl font-medium">
+                            {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                          </span>
+                        </div>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarUpload}
+                        className="hidden"
+                      />
                     </div>
                     <div>
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white">
@@ -324,9 +371,23 @@ export default function Settings() {
                       <p className="text-gray-500 dark:text-gray-400">
                         {user?.email || 'user@example.com'}
                       </p>
-                      <button className="mt-2 text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300">
-                        Change avatar
-                      </button>
+                      <div className="mt-2 flex space-x-2">
+                        <button 
+                          onClick={() => fileInputRef.current?.click()}
+                          disabled={uploadingAvatar}
+                          className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {uploadingAvatar ? 'Uploading...' : 'Change avatar'}
+                        </button>
+                        {user?.avatar && (
+                          <button 
+                            onClick={handleRemoveAvatar}
+                            className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                          >
+                            Remove
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -570,79 +631,6 @@ export default function Settings() {
                 <div className="flex justify-end mt-6">
                   <button
                     onClick={handleSavePrivacy}
-                    disabled={saving}
-                    className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg font-medium transition-colors"
-                  >
-                    {saving ? 'Saving...' : 'Save Changes'}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* Appearance Settings */}
-            {activeTab === "appearance" && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-                  Appearance
-                </h2>
-                
-                <div className="space-y-6">
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-4">
-                      Theme
-                    </h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <button
-                        onClick={() => !darkMode && toggleDarkMode()}
-                        className={`p-4 rounded-lg border-2 transition-colors ${
-                          darkMode
-                            ? 'border-gray-200 dark:border-gray-700'
-                            : 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                        }`}
-                      >
-                        <SunIcon className="h-6 w-6 mx-auto mb-2 text-yellow-500" />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          Light
-                        </span>
-                      </button>
-                      
-                      <button
-                        onClick={() => darkMode && toggleDarkMode()}
-                        className={`p-4 rounded-lg border-2 transition-colors ${
-                          !darkMode
-                            ? 'border-gray-200 dark:border-gray-700'
-                            : 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
-                        }`}
-                      >
-                        <MoonIcon className="h-6 w-6 mx-auto mb-2 text-indigo-500" />
-                        <span className="text-sm font-medium text-gray-900 dark:text-white">
-                          Dark
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900 dark:text-white mb-4">
-                      Language
-                    </h3>
-                    <select 
-                      value={appearance.language}
-                      onChange={(e) => setAppearance({ ...appearance, language: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
-                    >
-                      <option value="en">English</option>
-                      <option value="es">Español</option>
-                      <option value="fr">Français</option>
-                      <option value="de">Deutsch</option>
-                      <option value="zh">中文</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="flex justify-end mt-6">
-                  <button
-                    onClick={handleSaveAppearance}
                     disabled={saving}
                     className="px-6 py-2 bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white rounded-lg font-medium transition-colors"
                   >

@@ -63,7 +63,13 @@ export default function Profile() {
       // Extract profile data with fallbacks
       const profile = userData.profile || {};
       
-      setFormData({
+      console.log('=== BEFORE SET FORM DATA ===');
+      console.log('Profile data:', profile);
+      console.log('Profile academic:', profile?.academic);
+      console.log('Profile studyGoal:', profile?.studyGoal);
+      console.log('Profile budget:', profile?.budget);
+      
+      const newFormData = {
         name: userData.name || "",
         email: userData.email || "",
         bio: profile?.bio || "",
@@ -99,7 +105,13 @@ export default function Profile() {
         sopStatus: profile?.sopStatus || "",
         lorStatus: profile?.lorStatus || "",
         resumeStatus: profile?.resumeStatus || ""
-      });
+      };
+      
+      console.log('=== NEW FORM DATA CREATED ===');
+      console.log('New FormData keys:', Object.keys(newFormData));
+      console.log('New FormData object:', newFormData);
+      
+      setFormData(newFormData);
       
       // Log what was actually set in formData
       console.log('=== FORM DATA SET ===');

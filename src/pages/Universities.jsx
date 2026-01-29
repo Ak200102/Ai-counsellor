@@ -347,13 +347,10 @@ function Universities() {
   };
 
   // Filter and sort universities
-  console.log('=== ALL UNIVERSITY NAMES ===');
-  universities.forEach((uni, index) => {
-    if (index < 10) console.log(`${index + 1}. ${uni.name}`);
-  });
-  console.log('Total universities:', universities.length);
-  console.log('============================');
-
+  console.log('=== CATEGORY FILTER DEBUG ===');
+  console.log('Current category filter:', categoryFilter);
+  console.log('Total universities before filter:', universities.length);
+  
   const filteredUniversities = universities.filter(university => {
     const matchesSearch = university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (university.program && university.program.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -365,20 +362,20 @@ function Universities() {
       university.universityType === categoryFilter ||
       university.competitiveness === categoryFilter;
 
-    // Only show debug for first 5 universities when searching
-    if (searchTerm && universities.indexOf(university) < 5) {
-      console.log('=== UNIVERSITY DEBUG ===');
-      console.log('University name:', university.name);
-      console.log('Search term:', searchTerm);
-      console.log('Name includes search term:', university.name.toLowerCase().includes(searchTerm.toLowerCase()));
-      console.log('Matches search:', matchesSearch);
-      console.log('Matches category:', matchesCategory);
-      console.log('Will include:', matchesSearch && matchesCategory);
-      console.log('========================');
+    // Show debug for first few universities when category filter is not 'all'
+    if (categoryFilter !== 'all' && universities.indexOf(university) < 5) {
+      console.log('University:', university.name);
+      console.log('  - category:', university.category);
+      console.log('  - universityType:', university.universityType);
+      console.log('  - competitiveness:', university.competitiveness);
+      console.log('  - matchesCategory:', matchesCategory);
     }
 
     return matchesSearch && matchesCategory;
   });
+  
+  console.log('Universities after filter:', filteredUniversities.length);
+  console.log('============================');
 
   const sortedUniversities = [...filteredUniversities].sort((a, b) => {
     if (sortBy === 'ranking') {

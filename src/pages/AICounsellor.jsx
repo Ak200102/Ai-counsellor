@@ -678,7 +678,7 @@ export default function AICounsellor() {
           )}
 
           {/* Render comprehensive profile analysis */}
-          {message.profileAnalysis && (
+          {message.profileAnalysis && typeof message.profileAnalysis === 'object' && (
             <div className="mt-3 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-lg border border-white/10 rounded-lg">
               <p className="text-sm font-semibold text-purple-300 mb-3">📊 Profile Analysis</p>
               
@@ -689,8 +689,9 @@ export default function AICounsellor() {
                     message.profileAnalysis.academicStrength === 'Exceptional' ? 'text-green-400' :
                     message.profileAnalysis.academicStrength === 'Strong' ? 'text-blue-400' :
                     message.profileAnalysis.academicStrength === 'Average' ? 'text-yellow-400' :
-                    'text-red-400'
-                  }`}>{message.profileAnalysis.academicStrength}</span>
+                    message.profileAnalysis.academicStrength === 'Weak' ? 'text-red-400' :
+                    'text-gray-400'
+                  }`}>{message.profileAnalysis.academicStrength || 'Not assessed'}</span>
                 </div>
                 <div>
                   <span className="text-xs text-gray-400">Experience Level:</span>
@@ -698,20 +699,22 @@ export default function AICounsellor() {
                     message.profileAnalysis.experienceLevel === 'Extensive' ? 'text-green-400' :
                     message.profileAnalysis.experienceLevel === 'Good' ? 'text-blue-400' :
                     message.profileAnalysis.experienceLevel === 'Basic' ? 'text-yellow-400' :
-                    'text-red-400'
-                  }`}>{message.profileAnalysis.experienceLevel}</span>
+                    message.profileAnalysis.experienceLevel === 'None' ? 'text-red-400' :
+                    'text-gray-400'
+                  }`}>{message.profileAnalysis.experienceLevel || 'Not assessed'}</span>
                 </div>
                 <div>
                   <span className="text-xs text-gray-400">Readiness Score:</span>
                   <span className={`ml-2 text-xs font-medium ${
                     message.profileAnalysis.readinessScore === 'High' ? 'text-green-400' :
                     message.profileAnalysis.readinessScore === 'Medium' ? 'text-yellow-400' :
-                    'text-red-400'
-                  }`}>{message.profileAnalysis.readinessScore}</span>
+                    message.profileAnalysis.readinessScore === 'Low' ? 'text-red-400' :
+                    'text-gray-400'
+                  }`}>{message.profileAnalysis.readinessScore || 'Not assessed'}</span>
                 </div>
               </div>
 
-              {message.profileAnalysis.profileGaps && message.profileAnalysis.profileGaps.length > 0 && (
+              {message.profileAnalysis.profileGaps && Array.isArray(message.profileAnalysis.profileGaps) && message.profileAnalysis.profileGaps.length > 0 && (
                 <div className="mb-3">
                   <p className="text-xs text-gray-400 mb-1">Areas to Improve:</p>
                   <ul className="list-disc list-inside">
@@ -722,7 +725,7 @@ export default function AICounsellor() {
                 </div>
               )}
 
-              {message.profileAnalysis.nextSteps && message.profileAnalysis.nextSteps.length > 0 && (
+              {message.profileAnalysis.nextSteps && Array.isArray(message.profileAnalysis.nextSteps) && message.profileAnalysis.nextSteps.length > 0 && (
                 <div>
                   <p className="text-xs text-gray-400 mb-1">Recommended Next Steps:</p>
                   <ul className="list-disc list-inside">
@@ -752,17 +755,18 @@ export default function AICounsellor() {
                         <span className={`px-2 py-1 text-xs rounded-full ${
                           college.category === 'DREAM' ? 'bg-red-500/20 text-red-300 border border-red-500/30' :
                           college.category === 'TARGET' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
-                          'bg-green-500/20 text-green-300 border border-green-500/30'
-                        }`}>{college.category}</span>
+                          college.category === 'SAFE' ? 'bg-green-500/20 text-green-300 border border-green-500/30' :
+                          'bg-gray-500/20 text-gray-300 border border-gray-500/30'
+                        }`}>{college.category || 'UNKNOWN'}</span>
                       </div>
                       
-                      {college.fitExplanation && (
+                      {college.fitExplanation && typeof college.fitExplanation === 'string' && (
                         <p className="text-xs text-green-300 mb-2">
                           <span className="font-medium">Why it fits:</span> {college.fitExplanation}
                         </p>
                       )}
                       
-                      {college.riskFactors && college.riskFactors.length > 0 && (
+                      {college.riskFactors && Array.isArray(college.riskFactors) && college.riskFactors.length > 0 && (
                         <div className="mb-2">
                           <p className="text-xs text-yellow-300 font-medium">Risk Factors:</p>
                           <ul className="list-disc list-inside">
@@ -773,7 +777,7 @@ export default function AICounsellor() {
                         </div>
                       )}
                       
-                      {college.programs && college.programs.length > 0 && (
+                      {college.programs && Array.isArray(college.programs) && college.programs.length > 0 && (
                         <div>
                           <p className="text-xs text-blue-300 font-medium">Relevant Programs:</p>
                           <div className="flex flex-wrap gap-1 mt-1">
@@ -794,11 +798,11 @@ export default function AICounsellor() {
           )}
 
           {/* Render decision guidance */}
-          {message.decisionGuidance && (
+          {message.decisionGuidance && typeof message.decisionGuidance === 'object' && (
             <div className="mt-3 p-4 bg-gradient-to-r from-green-500/10 to-blue-500/10 backdrop-blur-lg border border-white/10 rounded-lg">
               <p className="text-sm font-semibold text-green-300 mb-3">🎯 Decision Guidance</p>
               
-              {message.decisionGuidance.keyFactors && message.decisionGuidance.keyFactors.length > 0 && (
+              {message.decisionGuidance.keyFactors && Array.isArray(message.decisionGuidance.keyFactors) && message.decisionGuidance.keyFactors.length > 0 && (
                 <div className="mb-3">
                   <p className="text-xs text-gray-400 mb-1">Key Factors to Consider:</p>
                   <ul className="list-disc list-inside">
@@ -809,7 +813,7 @@ export default function AICounsellor() {
                 </div>
               )}
 
-              {message.decisionGuidance.tradeoffs && message.decisionGuidance.tradeoffs.length > 0 && (
+              {message.decisionGuidance.tradeoffs && Array.isArray(message.decisionGuidance.tradeoffs) && message.decisionGuidance.tradeoffs.length > 0 && (
                 <div className="mb-3">
                   <p className="text-xs text-gray-400 mb-1">Trade-offs to Weigh:</p>
                   <ul className="list-disc list-inside">
@@ -820,7 +824,7 @@ export default function AICounsellor() {
                 </div>
               )}
 
-              {message.decisionGuidance.recommendations && message.decisionGuidance.recommendations.length > 0 && (
+              {message.decisionGuidance.recommendations && Array.isArray(message.decisionGuidance.recommendations) && message.decisionGuidance.recommendations.length > 0 && (
                 <div>
                   <p className="text-xs text-gray-400 mb-1">Recommendations:</p>
                   <ul className="list-disc list-inside">

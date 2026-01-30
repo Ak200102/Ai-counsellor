@@ -330,7 +330,12 @@ export default function AICounsellor() {
 
     try {
       console.log("Sending message to AI:", inputMessage);
-      console.log("User's shortlisted universities:", user?.profile?.shortlistedUniversities?.map(u => u.universityId?.name || u.universityId?.universityId?.name || 'Unknown'));
+      console.log("User's shortlisted universities:", user?.profile?.shortlistedUniversities?.map(u => {
+      console.log("University object:", u);
+      console.log("University ID:", u.universityId);
+      console.log("University name:", u.universityId?.name);
+      return u.universityId?.name || 'Unknown';
+    }));
       console.log("Shortlisted universities raw:", user?.profile?.shortlistedUniversities);
       
       // Check if user is asking to lock a university that's already shortlisted

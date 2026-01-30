@@ -71,12 +71,6 @@ export default function Profile() {
       // Extract profile data with fallbacks
       const profile = userData.profile || {};
       
-      console.log('=== BEFORE SET FORM DATA ===');
-      console.log('Profile data:', profile);
-      console.log('Profile academic:', profile?.academic);
-      console.log('Profile studyGoal:', profile?.studyGoal);
-      console.log('Profile budget:', profile?.budget);
-      
       const newFormData = {
         name: userData.name || "",
         email: userData.email || "",
@@ -97,13 +91,35 @@ export default function Profile() {
         fundingPlan: profile?.budget?.funding || "",
         // Standardized Tests - FROM NESTED OR DIRECT STRUCTURE
         ieltsTaken: profile?.ieltsTaken || false,
-        ieltsScore: profile?.ieltsScore?.overall || "",
+        ieltsScore: {
+          overall: profile?.ieltsScore?.overall || "",
+          listening: profile?.ieltsScore?.listening || "",
+          reading: profile?.ieltsScore?.reading || "",
+          writing: profile?.ieltsScore?.writing || "",
+          speaking: profile?.ieltsScore?.speaking || ""
+        },
         toeflTaken: profile?.toeflTaken || false,
-        toeflScore: profile?.toeflScore?.total || "",
+        toeflScore: {
+          total: profile?.toeflScore?.total || "",
+          reading: profile?.toeflScore?.reading || "",
+          listening: profile?.toeflScore?.listening || "",
+          speaking: profile?.toeflScore?.speaking || "",
+          writing: profile?.toeflScore?.writing || ""
+        },
         greTaken: profile?.greTaken || false,
-        greScore: profile?.greScore?.total || "",
+        greScore: {
+          total: profile?.greScore?.total || "",
+          verbal: profile?.greScore?.verbal || "",
+          quantitative: profile?.greScore?.quantitative || "",
+          analytical: profile?.greScore?.analytical || ""
+        },
         gmatTaken: profile?.gmatTaken || false,
-        gmatScore: profile?.gmatScore?.total || "",
+        gmatScore: {
+          total: profile?.gmatScore?.total || "",
+          verbal: profile?.gmatScore?.verbal || "",
+          quantitative: profile?.gmatScore?.quantitative || "",
+          analytical: profile?.gmatScore?.analytical || ""
+        },
         // Additional Academic Info - FROM DIRECT STRUCTURE
         workExperience: profile?.workExperience || "",
         researchExperience: profile?.researchExperience || "",
@@ -115,24 +131,14 @@ export default function Profile() {
         resumeStatus: profile?.resumeStatus || ""
       };
       
-      console.log('=== NEW FORM DATA CREATED ===');
-      console.log('New FormData keys:', Object.keys(newFormData));
-      console.log('New FormData object:', newFormData);
-      
       // Store in ref for immediate access
       formDataRef.current = newFormData;
       
-      // Set state with a callback to ensure proper update
-      setFormData(newFormData);
-      
-      // Force state update if needed
+      // Use setTimeout to avoid state update during render
       setTimeout(() => {
         setFormData(prev => ({ ...prev, ...newFormData }));
       }, 50);
       
-      console.log('=== FORM DATA LOADED ===');
-      console.log('FormDataRef current after load:', formDataRef.current);
-      console.log('FormData state after load:', formData);
     } catch (error) {
       console.error("Failed to fetch profile:", error);
     } finally {
@@ -145,86 +151,84 @@ export default function Profile() {
     try {
       // Get current form values from ref for immediate access
       const currentFormData = formDataRef.current;
-      console.log('=== SAVE DEBUG ===');
-      console.log('Current formDataRef state:', currentFormData);
-      console.log('FormDataRef keys at save:', Object.keys(currentFormData));
       
       // Convert flat formData to nested structure for backend - INCLUDE ALL FIELDS
       const nestedFormData = {
         name: currentFormData.name,
         email: currentFormData.email,
         bio: currentFormData.bio,
-        // Academic Background - ALL FIELDS
-        degree: currentFormData.degree,
-        subject: currentFormData.subject,
-        university: currentFormData.university,
-        graduationYear: currentFormData.graduationYear,
-        gpa: currentFormData.gpa,
-        // Study Goal - ALL FIELDS
-        intendedDegree: currentFormData.intendedDegree,
-        fieldOfStudy: currentFormData.fieldOfStudy,
-        intakeYear: currentFormData.intakeYear,
-        preferredCountries: currentFormData.preferredCountries,
-        // Budget - ALL FIELDS
-        budgetRange: currentFormData.budgetRange,
-        fundingPlan: currentFormData.fundingPlan,
-        // Standardized Tests - ALL FIELDS
+        // Academic Background - NESTED STRUCTURE
+        academic: {
+          level: currentFormData.degree,
+          major: currentFormData.subject,
+          university: currentFormData.university,
+          graduationYear: currentFormData.graduationYear,
+          gpa: currentFormData.gpa
+        },
+        // Study Goal - NESTED STRUCTURE
+        studyGoal: {
+          degree: currentFormData.intendedDegree,
+          field: currentFormData.fieldOfStudy,
+          intakeYear: currentFormData.intakeYear,
+          countries: currentFormData.preferredCountries
+        },
+        // Budget - NESTED STRUCTURE
+        budget: {
+          range: currentFormData.budgetRange,
+          funding: currentFormData.fundingPlan
+        },
+        // Standardized Tests - DIRECT STRUCTURE
         ieltsTaken: currentFormData.ieltsTaken,
-        ieltsScore: currentFormData.ieltsScore,
+        ieltsScore: {
+          overall: currentFormData.ieltsScore?.overall || "",
+          listening: currentFormData.ieltsScore?.listening || "",
+          reading: currentFormData.ieltsScore?.reading || "",
+          writing: currentFormData.ieltsScore?.writing || "",
+          speaking: currentFormData.ieltsScore?.speaking || ""
+        },
         toeflTaken: currentFormData.toeflTaken,
-        toeflScore: currentFormData.toeflScore,
+        toeflScore: {
+          total: currentFormData.toeflScore?.total || "",
+          reading: currentFormData.toeflScore?.reading || "",
+          listening: currentFormData.toeflScore?.listening || "",
+          speaking: currentFormData.toeflScore?.speaking || "",
+          writing: currentFormData.toeflScore?.writing || ""
+        },
         greTaken: currentFormData.greTaken,
-        greScore: currentFormData.greScore,
+        greScore: {
+          total: currentFormData.greScore?.total || "",
+          verbal: currentFormData.greScore?.verbal || "",
+          quantitative: currentFormData.greScore?.quantitative || "",
+          analytical: currentFormData.greScore?.analytical || ""
+        },
         gmatTaken: currentFormData.gmatTaken,
-        gmatScore: currentFormData.gmatScore,
-        // Additional Academic Info - ALL FIELDS
+        gmatScore: {
+          total: currentFormData.gmatScore?.total || "",
+          verbal: currentFormData.gmatScore?.verbal || "",
+          quantitative: currentFormData.gmatScore?.quantitative || "",
+          analytical: currentFormData.gmatScore?.analytical || ""
+        },
+        // Additional Academic Info - DIRECT STRUCTURE
         workExperience: currentFormData.workExperience,
         researchExperience: currentFormData.researchExperience,
         publications: currentFormData.publications,
         certifications: currentFormData.certifications,
-        // Application Readiness - ALL FIELDS
+        // Application Readiness - DIRECT STRUCTURE
         sopStatus: currentFormData.sopStatus,
         lorStatus: currentFormData.lorStatus,
         resumeStatus: currentFormData.resumeStatus
       };
       
-      console.log('Sending to backend:', nestedFormData);
-      
       const response = await updateUser(nestedFormData);
-      
-      console.log('=== BACKEND RESPONSE ANALYSIS ===');
-      console.log('Full backend response:', response);
-      console.log('Backend user data:', response.data?.user);
-      console.log('Backend profile data:', response.data?.user?.profile);
-      
-      const backendProfile = response.data?.user?.profile;
-      if (backendProfile) {
-        console.log('=== CHECKING MISSING FIELDS IN RESPONSE ===');
-        console.log('workExperience in response:', backendProfile.workExperience);
-        console.log('researchExperience in response:', backendProfile.researchExperience);
-        console.log('publications in response:', backendProfile.publications);
-        console.log('certifications in response:', backendProfile.certifications);
-        console.log('sopStatus in response:', backendProfile.sopStatus);
-        console.log('lorStatus in response:', backendProfile.lorStatus);
-        console.log('resumeStatus in response:', backendProfile.resumeStatus);
-        console.log('ieltsTaken in response:', backendProfile.ieltsTaken);
-        console.log('ieltsScore in response:', backendProfile.ieltsScore);
-        console.log('toeflTaken in response:', backendProfile.toeflTaken);
-        console.log('toeflScore in response:', backendProfile.toeflScore);
-        console.log('greTaken in response:', backendProfile.greTaken);
-        console.log('greScore in response:', backendProfile.greScore);
-        console.log('gmatTaken in response:', backendProfile.gmatTaken);
-        console.log('gmatScore in response:', backendProfile.gmatScore);
-      }
-      
-      console.log('Save completed successfully');
       
       setUser(prev => ({ ...prev, ...nestedFormData }));
       setEditing(false);
+      setUploadSuccess("Profile updated successfully!");
+      setTimeout(() => setUploadSuccess(""), 3000);
     } catch (error) {
-      console.error("=== SAVE ERROR ===");
       console.error("Failed to update profile:", error);
-      console.error("Error response:", error.response?.data);
+      setUploadError(error.response?.data?.message || "Failed to update profile");
+      setTimeout(() => setUploadError(""), 5000);
     } finally {
       setSaving(false);
     }

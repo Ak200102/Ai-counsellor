@@ -73,10 +73,12 @@ export default function Signup() {
       
       console.log("✅ OTP request successful:", response);
       
-      // Check if OTP is included in development mode
+      // Check if OTP is included in response (for debugging)
       if (response.data?.otp) {
-        console.log("🔐 Development OTP:", response.data.otp);
-        setError(`Development OTP: ${response.data.otp}`);
+        console.log("🔐 DEBUG OTP:", response.data.otp);
+        setError(`🔐 DEBUG OTP: ${response.data.otp} (Use this to verify)`);
+      } else {
+        setError("✅ OTP sent! Check your email (including spam folder)");
       }
       
       setOtpSent(true);

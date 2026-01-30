@@ -485,6 +485,14 @@ export default function AICounsellor() {
           setTimeout(() => setActionMessage(""), 3000);
         }
         
+        // Handle auto-created tasks from shortlisting
+        if (safeResponse.taskCreated && safeResponse.taskCreated.title) {
+          console.log("Auto-created task:", safeResponse.taskCreated);
+          setActionMessage(`Task created: ${safeResponse.taskCreated.title}`);
+          await refreshUserData();
+          setTimeout(() => setActionMessage(""), 3000);
+        }
+        
         if (safeResponse.action === "LOCK_UNIVERSITY" && safeResponse.universityLocked) {
           console.log("University locked:", safeResponse.universityLocked);
           // Refresh user data to show locked university in Universities page
@@ -492,6 +500,14 @@ export default function AICounsellor() {
           setTimeout(() => {
             navigate("/application-guidance");
           }, 2000);
+        }
+        
+        if (safeResponse.action === "CREATE_TASK" && safeResponse.taskCreated) {
+          console.log("Task created:", safeResponse.taskCreated);
+          setActionMessage(`Task created: ${safeResponse.taskCreated.title}`);
+          // Refresh user data to show new task in Tasks page
+          await refreshUserData();
+          setTimeout(() => setActionMessage(""), 3000);
         }
       }
     } catch (err) {

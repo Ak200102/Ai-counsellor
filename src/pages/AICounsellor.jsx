@@ -677,29 +677,159 @@ export default function AICounsellor() {
             </div>
           )}
 
-          {/* Render college recommendations as simple text with auto-shortlisting */}
+          {/* Render comprehensive profile analysis */}
+          {message.profileAnalysis && (
+            <div className="mt-3 p-4 bg-gradient-to-r from-purple-500/10 to-blue-500/10 backdrop-blur-lg border border-white/10 rounded-lg">
+              <p className="text-sm font-semibold text-purple-300 mb-3">📊 Profile Analysis</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+                <div>
+                  <span className="text-xs text-gray-400">Academic Strength:</span>
+                  <span className={`ml-2 text-xs font-medium ${
+                    message.profileAnalysis.academicStrength === 'Exceptional' ? 'text-green-400' :
+                    message.profileAnalysis.academicStrength === 'Strong' ? 'text-blue-400' :
+                    message.profileAnalysis.academicStrength === 'Average' ? 'text-yellow-400' :
+                    'text-red-400'
+                  }`}>{message.profileAnalysis.academicStrength}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-gray-400">Experience Level:</span>
+                  <span className={`ml-2 text-xs font-medium ${
+                    message.profileAnalysis.experienceLevel === 'Extensive' ? 'text-green-400' :
+                    message.profileAnalysis.experienceLevel === 'Good' ? 'text-blue-400' :
+                    message.profileAnalysis.experienceLevel === 'Basic' ? 'text-yellow-400' :
+                    'text-red-400'
+                  }`}>{message.profileAnalysis.experienceLevel}</span>
+                </div>
+                <div>
+                  <span className="text-xs text-gray-400">Readiness Score:</span>
+                  <span className={`ml-2 text-xs font-medium ${
+                    message.profileAnalysis.readinessScore === 'High' ? 'text-green-400' :
+                    message.profileAnalysis.readinessScore === 'Medium' ? 'text-yellow-400' :
+                    'text-red-400'
+                  }`}>{message.profileAnalysis.readinessScore}</span>
+                </div>
+              </div>
+
+              {message.profileAnalysis.profileGaps && message.profileAnalysis.profileGaps.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-gray-400 mb-1">Areas to Improve:</p>
+                  <ul className="list-disc list-inside">
+                    {message.profileAnalysis.profileGaps.map((gap, index) => (
+                      <li key={index} className="text-xs text-yellow-300">{gap}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {message.profileAnalysis.nextSteps && message.profileAnalysis.nextSteps.length > 0 && (
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">Recommended Next Steps:</p>
+                  <ul className="list-disc list-inside">
+                    {message.profileAnalysis.nextSteps.map((step, index) => (
+                      <li key={index} className="text-xs text-green-300">{step}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Render enhanced college recommendations with explanations */}
           {message.collegeRecommendations && Array.isArray(message.collegeRecommendations) && message.collegeRecommendations.length > 0 && (
-            <div className="mt-3 p-3 bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg">
-              <p className="text-sm font-medium text-gray-300 mb-2">Recommended Universities:</p>
-              <div className="flex flex-wrap gap-2">
+            <div className="mt-3 p-4 bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg">
+              <p className="text-sm font-semibold text-blue-300 mb-3">🎓 University Recommendations</p>
+              
+              <div className="space-y-3">
                 {message.collegeRecommendations.map((college, index) => {
                   if (!college || typeof college !== 'object') {
                     return null;
                   }
                   return (
-                    <div
-                      key={index}
-                      className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-full text-sm"
-                    >
-                      {college.name || 'University'}
-                      {college.category && (
-                        <span className="ml-1 text-xs text-blue-400">({college.category})</span>
+                    <div key={index} className="p-3 bg-white/5 rounded-lg border border-white/10">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="text-sm font-medium text-white">{college.name || 'University'}</h4>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          college.category === 'DREAM' ? 'bg-red-500/20 text-red-300 border border-red-500/30' :
+                          college.category === 'TARGET' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' :
+                          'bg-green-500/20 text-green-300 border border-green-500/30'
+                        }`}>{college.category}</span>
+                      </div>
+                      
+                      {college.fitExplanation && (
+                        <p className="text-xs text-green-300 mb-2">
+                          <span className="font-medium">Why it fits:</span> {college.fitExplanation}
+                        </p>
+                      )}
+                      
+                      {college.riskFactors && college.riskFactors.length > 0 && (
+                        <div className="mb-2">
+                          <p className="text-xs text-yellow-300 font-medium">Risk Factors:</p>
+                          <ul className="list-disc list-inside">
+                            {college.riskFactors.map((risk, riskIndex) => (
+                              <li key={riskIndex} className="text-xs text-yellow-200">{risk}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {college.programs && college.programs.length > 0 && (
+                        <div>
+                          <p className="text-xs text-blue-300 font-medium">Relevant Programs:</p>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {college.programs.map((program, programIndex) => (
+                              <span key={programIndex} className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded">
+                                {program}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
                       )}
                     </div>
                   );
                 })}
               </div>
-              <p className="text-xs text-green-400 mt-2">✓ Universities have been auto-shortlisted to your profile</p>
+              <p className="text-xs text-green-400 mt-3">✓ Universities have been auto-shortlisted to your profile</p>
+            </div>
+          )}
+
+          {/* Render decision guidance */}
+          {message.decisionGuidance && (
+            <div className="mt-3 p-4 bg-gradient-to-r from-green-500/10 to-blue-500/10 backdrop-blur-lg border border-white/10 rounded-lg">
+              <p className="text-sm font-semibold text-green-300 mb-3">🎯 Decision Guidance</p>
+              
+              {message.decisionGuidance.keyFactors && message.decisionGuidance.keyFactors.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-gray-400 mb-1">Key Factors to Consider:</p>
+                  <ul className="list-disc list-inside">
+                    {message.decisionGuidance.keyFactors.map((factor, index) => (
+                      <li key={index} className="text-xs text-blue-300">{factor}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {message.decisionGuidance.tradeoffs && message.decisionGuidance.tradeoffs.length > 0 && (
+                <div className="mb-3">
+                  <p className="text-xs text-gray-400 mb-1">Trade-offs to Weigh:</p>
+                  <ul className="list-disc list-inside">
+                    {message.decisionGuidance.tradeoffs.map((tradeoff, index) => (
+                      <li key={index} className="text-xs text-yellow-300">{tradeoff}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {message.decisionGuidance.recommendations && message.decisionGuidance.recommendations.length > 0 && (
+                <div>
+                  <p className="text-xs text-gray-400 mb-1">Recommendations:</p>
+                  <ul className="list-disc list-inside">
+                    {message.decisionGuidance.recommendations.map((rec, index) => (
+                      <li key={index} className="text-xs text-green-300">{rec}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
         </div>

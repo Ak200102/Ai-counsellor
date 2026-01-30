@@ -80,6 +80,7 @@ function Tasks() {
     if (filter === "completed") return task.status === "COMPLETED";
     if (filter === "in-progress") return task.status === "IN_PROGRESS";
     if (filter === "pending") return task.status === "NOT_STARTED";
+    if (filter === "ai-created") return task.createdBy === "AI";
     return true;
   });
 
@@ -88,6 +89,7 @@ function Tasks() {
     completed: tasks.filter(t => t.status === "COMPLETED").length,
     inProgress: tasks.filter(t => t.status === "IN_PROGRESS").length,
     pending: tasks.filter(t => t.status === "NOT_STARTED").length,
+    aiCreated: tasks.filter(t => t.createdBy === "AI").length,
     totalPoints: tasks.filter(t => t.status === "COMPLETED").reduce((sum, task) => sum + (task.points || 0), 0)
   };
 
@@ -310,22 +312,24 @@ function Tasks() {
           className="bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 mb-8"
         >
           <div className="flex flex-wrap gap-2">
-            {["all", "pending", "in-progress", "completed"].map((filterOption) => (
+            {["all", "pending", "in-progress", "completed", "ai-created"].map((filterOption) => (
               <button
                 key={filterOption}
                 onClick={() => setFilter(filterOption)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2 ${
                   filter === filterOption
                     ? "bg-blue-600 text-white"
                     : "bg-white/10 text-gray-300 hover:bg-white/20"
                 }`}
               >
-                {filterOption.replace("-", " ")}
+                {filterOption === "ai-created" && <SparklesIcon className="w-4 h-4" />}
+                {filterOption === "ai-created" ? "AI Created" : filterOption.replace("-", " ")}
                 {filterOption !== "all" && (
                   <span className="ml-2 px-2 py-0.5 bg-white/20 rounded-full text-xs">
                     {filterOption === "pending" ? stats.pending :
                      filterOption === "in-progress" ? stats.inProgress :
-                     stats.completed}
+                     filterOption === "completed" ? stats.completed :
+                     filterOption === "ai-created" ? stats.aiCreated : 0}
                   </span>
                 )}
               </button>
@@ -379,12 +383,25 @@ function Tasks() {
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
-                            <h3 className="text-lg font-semibold text-white mb-1">
-                              {task.title}
-                            </h3>
+                            <div className="flex items-center gap-2 mb-1">
+                              <h3 className="text-lg font-semibold text-white">
+                                {task.title}
+                              </h3>
+                              {task.createdBy === "AI" && (
+                                <span className="px-2 py-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 text-purple-300 text-xs rounded-full flex items-center gap-1">
+                                  <SparklesIcon className="w-3 h-3" />
+                                  AI Created
+                                </span>
+                              )}
+                            </div>
                             <p className="text-gray-300 text-sm mb-3">
                               {task.description}
                             </p>
+                            {task.reason && (
+                              <p className="text-xs text-blue-300 mb-2">
+                                <span className="font-medium">Why this matters:</span> {task.reason}
+                              </p>
+                            )}
                           </div>
                         </div>
 

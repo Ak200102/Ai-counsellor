@@ -965,8 +965,8 @@ export default function Profile() {
                           <label className="block text-sm font-medium text-gray-300 mb-2">Overall Score</label>
                           <input
                             type="text"
-                            value={getCurrentFormData().ieltsScore || ""}
-                            onChange={(e) => updateFormData('ieltsScore', e.target.value)}
+                            value={getCurrentFormData().ieltsScore?.overall || ""}
+                            onChange={(e) => updateFormData('ieltsScore', {...getCurrentFormData().ieltsScore, overall: e.target.value})}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 7.5"
@@ -995,8 +995,8 @@ export default function Profile() {
                           <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
                           <input
                             type="text"
-                            value={getCurrentFormData().toeflScore || ""}
-                            onChange={(e) => updateFormData('toeflScore', e.target.value)}
+                            value={getCurrentFormData().toeflScore?.total || ""}
+                            onChange={(e) => updateFormData('toeflScore', {...getCurrentFormData().toeflScore, total: e.target.value})}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 100"
@@ -1025,8 +1025,8 @@ export default function Profile() {
                           <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
                           <input
                             type="text"
-                            value={getCurrentFormData().greScore || ""}
-                            onChange={(e) => updateFormData('greScore', e.target.value)}
+                            value={getCurrentFormData().greScore?.total || ""}
+                            onChange={(e) => updateFormData('greScore', {...getCurrentFormData().greScore, total: e.target.value})}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 320"
@@ -1055,8 +1055,8 @@ export default function Profile() {
                           <label className="block text-sm font-medium text-gray-300 mb-2">Total Score</label>
                           <input
                             type="text"
-                            value={getCurrentFormData().gmatScore || ""}
-                            onChange={(e) => updateFormData('gmatScore', e.target.value)}
+                            value={getCurrentFormData().gmatScore?.total || ""}
+                            onChange={(e) => updateFormData('gmatScore', {...getCurrentFormData().gmatScore, total: e.target.value})}
                             disabled={!editing}
                             className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             placeholder="e.g., 700"

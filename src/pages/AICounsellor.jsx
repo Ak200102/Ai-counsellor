@@ -38,8 +38,9 @@ export default function AICounsellor() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [aiRecommendations, setAiRecommendations] = useState(null);
   const [voiceEnabled, setVoiceEnabled] = useState(true);
-  const [speechRate, setSpeechRate] = useState(0.9);
-  const [speechPitch, setSpeechPitch] = useState(1);
+  const [speechRate, setSpeechRate] = useState(0.85); // Slightly slower for natural speech
+  const [speechPitch, setSpeechPitch] = useState(0.95); // Slightly lower for more natural tone
+  const [selectedVoice, setSelectedVoice] = useState(null);
   const [showVoiceSettings, setShowVoiceSettings] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
   const [universities, setUniversities] = useState([]);
@@ -204,6 +205,46 @@ export default function AICounsellor() {
     if (!('speechSynthesis' in window)) {
       console.warn('Speech synthesis not supported in this browser');
     }
+    // Load available voices
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      // Prefer natural-sounding voices
+      const preferredVoices = [
+        'Google US English',
+        'Microsoft Zira Desktop',
+        'Microsoft David Desktop',
+        'Samantha',
+        'Alex',
+        'Karen',
+        'Moira',
+        'Tessa',
+        'Veena'
+      ];
+      
+      // Try to find a preferred voice
+      let foundVoice = null;
+      for (const preferred of preferredVoices) {
+        foundVoice = voices.find(voice => 
+          voice.name.includes(preferred) || 
+          voice.name.toLowerCase().includes(preferred.toLowerCase())
+        );
+        if (foundVoice) break;
+      }
+      
+      // Fallback to any English voice
+      if (!foundVoice) {
+        foundVoice = voices.find(voice => voice.lang.includes('en'));
+      }
+      
+      setSelectedVoice(foundVoice || voices[0]);
+    };
+
+    loadVoices();
+    
+    // Voices load asynchronously, so listen for the event
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
   }, []);
 
   const fetchUserData = async () => {
@@ -267,7 +308,7 @@ export default function AICounsellor() {
     setIsListening(false);
   };
 
-  // Text-to-speech function
+  // Enhanced text-to-speech function with natural human-like settings
   const speakText = (text) => {
     if (!voiceEnabled || !('speechSynthesis' in window)) {
       return;
@@ -277,9 +318,26 @@ export default function AICounsellor() {
     window.speechSynthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = speechRate;
-    utterance.pitch = speechPitch;
-    utterance.volume = 1;
+    
+    // Natural human-like settings
+    utterance.rate = speechRate;           // 0.85 = slightly slower, more natural
+    utterance.pitch = speechPitch;         // 0.95 = slightly lower, less robotic
+    utterance.volume = 0.9;               // 0.9 = slightly lower volume, more natural
+    
+    // Add natural pauses and intonation
+    utterance.lang = 'en-US';
+    
+    // Set the selected voice for more natural sound
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+    
+    // Add prosody for more natural speech patterns
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim());
+    if (sentences.length > 1) {
+      // Add slight pauses between sentences
+      utterance.text = text.replace(/([.!?]+)/g, '$1 ');
+    }
 
     utterance.onstart = () => {
       setIsSpeaking(true);
@@ -1121,6 +1179,8 @@ export default function AICounsellor() {
         setSpeechRate={setSpeechRate}
         speechPitch={speechPitch}
         setSpeechPitch={setSpeechPitch}
+        selectedVoice={selectedVoice}
+        setSelectedVoice={setSelectedVoice}
       />
 
       {/* Chat History Modal */}

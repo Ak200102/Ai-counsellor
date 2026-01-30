@@ -64,15 +64,27 @@ export default function Signup() {
     setError("");
     
     try {
-      await requestSignupOTP({ 
+      console.log("📧 Requesting OTP for:", formData.email);
+      const response = await requestSignupOTP({ 
         email: formData.email,
         name: formData.name,
         password: formData.password
       });
+      
+      console.log("✅ OTP request successful:", response);
+      
+      // Check if OTP is included in development mode
+      if (response.data?.otp) {
+        console.log("🔐 Development OTP:", response.data.otp);
+        setError(`Development OTP: ${response.data.otp}`);
+      }
+      
       setOtpSent(true);
       setStep(2);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to send OTP. Please try again.");
+      console.error("❌ OTP request failed:", err);
+      const errorMessage = err.response?.data?.message || "Failed to send OTP. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -88,16 +100,29 @@ export default function Signup() {
     setError("");
     
     try {
+      console.log("🔐 Verifying OTP for:", formData.email);
       const response = await verifySignupOTP({ email: formData.email, otp });
       
+      console.log("✅ OTP verification successful:", response);
+      
       // Store token and user data
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      if (response.data?.token) {
+        localStorage.setItem("token", response.data.token);
+      }
+      if (response.data?.user) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+      }
       
       setOtpVerified(true);
       setStep(3);
+      
+      // Show success message
+      console.log("🎉 Account created successfully!");
+      
     } catch (err) {
-      setError(err.response?.data?.message || "Invalid OTP. Please try again.");
+      console.error("❌ OTP verification failed:", err);
+      const errorMessage = err.response?.data?.message || "Invalid OTP. Please try again.";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { askCounsellor, getMe, getUniversities, getConversationHistory, saveConversation } from "../helpers/endpoints";
+import api from "../helpers/api";
 import { shortlistUniversity, unshortlistUniversity, lockUniversity } from "../helpers/endpoints";
 import { createTask } from "../helpers/endpoints";
 import { getUniversityIdByName } from "../utils/universityMapping.js";
@@ -63,30 +64,24 @@ export default function AICounsellor() {
 
   // Function to delete chat history
   const deleteChatHistory = async () => {
+    if (!window.confirm("Are you sure you want to delete all chat history? This cannot be undone.")) {
+      return;
+    }
+
     try {
-      // Call delete conversation endpoint (need to create this)
-      const response = await fetch('/api/counsellor/history', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      const response = await api.delete("/api/counsellor/history");
       
-      if (response.ok) {
-        // Clear local state
-        setChatHistory([]);
-        setMessages([]);
-        setShowChatHistory(false);
-        setActionMessage("Chat history deleted successfully");
-        setTimeout(() => setActionMessage(""), 3000);
-      } else {
-        throw new Error('Failed to delete chat history');
-      }
+      // Clear local state
+      setChatHistory([]);
+      setMessages([]);
+      setShowChatHistory(false);
+      setActionMessage(response.data.message || "Chat history deleted successfully");
+      setTimeout(() => setActionMessage(""), 3000);
     } catch (error) {
       console.error("Error deleting chat history:", error);
-      setActionMessage("Failed to delete chat history");
-      setTimeout(() => setActionMessage(""), 3000);
+      const errorMessage = error.response?.data?.message || error.message || "Failed to delete chat history";
+      setActionMessage(`Error: ${errorMessage}`);
+      setTimeout(() => setActionMessage(""), 5000);
     }
   };
 

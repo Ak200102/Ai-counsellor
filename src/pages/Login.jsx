@@ -39,7 +39,6 @@ export default function Login() {
     setError("");
 
     try {
-      console.log("🔑 Attempting login for:", formData.email);
       const response = await login(formData);
       const token = response.data?.token;
       
@@ -47,15 +46,11 @@ export default function Login() {
         throw new Error("No token received from server");
       }
       
-      console.log("✅ Login successful, token received");
-      
       // Use Redux to set token
       dispatch(setToken(token));
       
-      console.log("🎯 Redirecting to dashboard...");
       navigate("/dashboard");
     } catch (err) {
-      console.error("❌ Login failed:", err);
       const errorMessage = err.response?.data?.message || err.message || "Login failed. Please try again.";
       setError(errorMessage);
     } finally {

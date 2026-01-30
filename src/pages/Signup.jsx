@@ -64,27 +64,17 @@ export default function Signup() {
     setError("");
     
     try {
-      console.log("📧 Requesting OTP for:", formData.email);
       const response = await requestSignupOTP({ 
         email: formData.email,
         name: formData.name,
         password: formData.password
       });
       
-      console.log("✅ OTP request successful:", response);
-      
-      // Check if OTP is included in response (for debugging)
-      if (response.data?.otp) {
-        console.log("🔐 DEBUG OTP:", response.data.otp);
-        setError(`🔐 DEBUG OTP: ${response.data.otp} (Use this to verify)`);
-      } else {
-        setError("✅ OTP sent! Check your email (including spam folder)");
-      }
+      setError("OTP sent! Check your email (including spam folder)");
       
       setOtpSent(true);
       setStep(2);
     } catch (err) {
-      console.error("❌ OTP request failed:", err);
       const errorMessage = err.response?.data?.message || "Failed to send OTP. Please try again.";
       setError(errorMessage);
     } finally {
@@ -102,10 +92,7 @@ export default function Signup() {
     setError("");
     
     try {
-      console.log("🔐 Verifying OTP for:", formData.email);
       const response = await verifySignupOTP({ email: formData.email, otp });
-      
-      console.log("✅ OTP verification successful:", response);
       
       // Store token and user data
       if (response.data?.token) {
@@ -118,11 +105,7 @@ export default function Signup() {
       setOtpVerified(true);
       setStep(3);
       
-      // Show success message
-      console.log("🎉 Account created successfully!");
-      
     } catch (err) {
-      console.error("❌ OTP verification failed:", err);
       const errorMessage = err.response?.data?.message || "Invalid OTP. Please try again.";
       setError(errorMessage);
     } finally {

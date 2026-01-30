@@ -447,7 +447,7 @@ export default function AICounsellor() {
         action: safeResponse.action || "NONE",
         task: safeResponse.task && typeof safeResponse.task === 'object' ? safeResponse.task : null,
         universityName: safeResponse.universityName || null,
-        autoShortlistedResults: Array.isArray(safeResponse.autoShortlistedResults) ? safeResponse.autoShortlistedResults : []
+        autoShortlistedResults: Array.isArray(safeResponse.autoShortlistedResults) ? safeResponse.autoShortlistedResults : Array.isArray(safeResponse.autoShortlisted) ? safeResponse.autoShortlisted : []
       };
       
       console.log("AI Message to display:", aiMsg);
@@ -486,9 +486,10 @@ export default function AICounsellor() {
         }
         
         // Handle auto-created tasks from shortlisting
-        if (safeResponse.taskCreated && safeResponse.taskCreated.title) {
-          console.log("Auto-created task:", safeResponse.taskCreated);
-          setActionMessage(`Task created: ${safeResponse.taskCreated.title}`);
+        if ((safeResponse.taskCreated && safeResponse.taskCreated.title) || (safeResponse.action === "AUTO_SHORTLIST_MULTIPLE" && safeResponse.autoShortlisted && safeResponse.autoShortlisted.length > 0)) {
+          console.log("Auto-created task detected:", safeResponse.taskCreated);
+          const taskTitle = safeResponse.taskCreated?.title || "Review and compare shortlisted universities";
+          setActionMessage(`Task created: ${taskTitle}`);
           await refreshUserData();
           setTimeout(() => setActionMessage(""), 3000);
         }

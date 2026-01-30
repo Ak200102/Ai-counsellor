@@ -338,7 +338,7 @@ export default function AICounsellor() {
       
       if (isLockRequest && universityName) {
         const isShortlisted = user?.profile?.shortlistedUniversities?.some(u => 
-          u.universityId === '6979264b061b38d8d1d18228' // Carnegie Mellon's ID
+          u.universityName === universityName
         );
         console.log(`Is ${universityName} shortlisted?`, isShortlisted);
         

@@ -61,6 +61,35 @@ export default function AICounsellor() {
     }
   };
 
+  // Function to delete chat history
+  const deleteChatHistory = async () => {
+    try {
+      // Call delete conversation endpoint (need to create this)
+      const response = await fetch('/api/counsellor/history', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (response.ok) {
+        // Clear local state
+        setChatHistory([]);
+        setMessages([]);
+        setShowChatHistory(false);
+        setActionMessage("Chat history deleted successfully");
+        setTimeout(() => setActionMessage(""), 3000);
+      } else {
+        throw new Error('Failed to delete chat history');
+      }
+    } catch (error) {
+      console.error("Error deleting chat history:", error);
+      setActionMessage("Failed to delete chat history");
+      setTimeout(() => setActionMessage(""), 3000);
+    }
+  };
+
   // Auto-save conversation on unmount or when leaving page
   useEffect(() => {
     const handleBeforeUnload = () => {
@@ -960,12 +989,21 @@ export default function AICounsellor() {
                       {messages.length + chatHistory.length} messages
                     </span>
                   </div>
-                  <button
-                    onClick={() => setShowChatHistory(false)}
-                    className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-                  >
-                    <ArrowLeftIcon className="w-5 h-5" />
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={deleteChatHistory}
+                      className="p-2 bg-red-500/20 hover:bg-red-500/30 text-red-300 rounded-lg transition-colors"
+                      title="Delete Chat History"
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => setShowChatHistory(false)}
+                      className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
+                    >
+                      <ArrowLeftIcon className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
               </div>
 

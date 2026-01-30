@@ -330,21 +330,21 @@ export default function AICounsellor() {
 
     try {
       console.log("Sending message to AI:", inputMessage);
-      console.log("User's shortlisted universities:", user?.profile?.shortlistedUniversities?.map(u => {
+      console.log("User's shortlisted universities:", user?.shortlistedUniversities?.map(u => {
       console.log("University object:", u);
       console.log("University ID:", u.universityId);
       console.log("University name:", u.universityId?.name);
       return u.universityId?.name || 'Unknown';
     }));
-      console.log("Shortlisted universities raw:", user?.profile?.shortlistedUniversities);
+      console.log("Shortlisted universities raw:", user?.shortlistedUniversities);
       
       // Check if user is asking to lock a university that's already shortlisted
       const isLockRequest = inputMessage.toLowerCase().includes('lock');
       const universityName = inputMessage.match(/lock\s+(.+?)(?:\s+for|\s*$)/i)?.[1]?.trim();
       
       if (isLockRequest && universityName) {
-        const isShortlisted = user?.profile?.shortlistedUniversities?.some(u => 
-          u.universityName === universityName
+        const isShortlisted = user?.shortlistedUniversities?.some(u => 
+          u.universityId?.name === universityName
         );
         console.log(`Is ${universityName} shortlisted?`, isShortlisted);
         
@@ -393,9 +393,9 @@ export default function AICounsellor() {
         - Resume Status: ${profile.resumeStatus || 'Not specified'}
         
         🏛️ UNIVERSITY STATUS:
-        - Shortlisted Universities: ${user?.profile?.shortlistedUniversities?.map(u => u.universityId?.name || u.universityId?.universityId?.name || 'Unknown').join(', ') || 'None'}
+        - Shortlisted Universities: ${user?.shortlistedUniversities?.map(u => u.universityId?.name || 'Unknown').join(', ') || 'None'}
         - Locked University: ${user?.profile?.lockedUniversity?.universityId?.name || 'None'}
-        - Number of Shortlisted: ${user?.profile?.shortlistedUniversities?.length || 0}
+        - Number of Shortlisted: ${user?.shortlistedUniversities?.length || 0}
         
         📊 PROFILE COMPLETION: ${profile.completionPercentage || 0}%
         

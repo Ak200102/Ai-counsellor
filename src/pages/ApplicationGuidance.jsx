@@ -399,7 +399,9 @@ export default function ApplicationGuidance() {
         >
           <h2 className="text-xl font-bold text-white mb-6">Required Documents</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {requiredDocuments.map((doc, index) => (
+            {requiredDocuments.map((doc, index) => {
+              const StatusIcon = getDocumentStatusIcon(doc.status);
+              return (
               <motion.div
                 key={doc.name}
                 initial={{ opacity: 0, y: 20 }}
@@ -409,7 +411,7 @@ export default function ApplicationGuidance() {
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center space-x-2">
-                    <doc.icon className={`w-5 h-5 ${getDocumentStatusColor(doc.status)}`} />
+                    <StatusIcon className={`w-5 h-5 ${getDocumentStatusColor(doc.status)}`} />
                     <h3 className="font-semibold text-white">{doc.name}</h3>
                   </div>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -426,7 +428,8 @@ export default function ApplicationGuidance() {
                   <span>Due: {new Date(doc.dueDate).toLocaleDateString()}</span>
                 </div>
               </motion.div>
-            ))}
+            );
+            })}
           </div>
         </motion.div>
 

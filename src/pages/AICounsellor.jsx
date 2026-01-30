@@ -195,6 +195,7 @@ export default function AICounsellor() {
 
   useEffect(() => {
     fetchUserData();
+    fetchConversationHistory(); // Load chat history on component mount
     // Check if browser supports speech recognition
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
       console.warn('Speech recognition not supported in this browser');

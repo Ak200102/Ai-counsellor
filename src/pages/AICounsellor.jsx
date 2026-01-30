@@ -958,7 +958,7 @@ export default function AICounsellor() {
                 <h3 className="text-xl font-semibold text-white mb-2">
                   Welcome to AI Counsellor
                 </h3>
-                <p className="text-gray-300 text-lg max-w-md">
+                <p className="text-gray-300 text-lg max-w-md mx-auto">
                   I'm here to guide you through your study-abroad journey. 
                   Ask me anything about universities, applications, or your profile.
                 </p>

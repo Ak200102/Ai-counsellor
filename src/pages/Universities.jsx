@@ -635,7 +635,9 @@ function Universities() {
                   {/* AI Message */}
                   {aiRecommendations.message && (
                     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mt-4">
-                      <p className="text-white text-sm leading-relaxed">{aiRecommendations.message}</p>
+                      <p className="text-white text-sm leading-relaxed break-words whitespace-pre-wrap">
+                        {aiRecommendations.message}
+                      </p>
                     </div>
                   )}
                 </div>

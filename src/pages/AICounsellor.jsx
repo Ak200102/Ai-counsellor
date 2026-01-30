@@ -630,98 +630,29 @@ export default function AICounsellor() {
             </div>
           )}
 
-          {/* Render college recommendations if available */}
-          {(() => {
-            return message.collegeRecommendations && Array.isArray(message.collegeRecommendations) && message.collegeRecommendations.length > 0;
-          })() && (
-            <div className="mt-4 space-y-3">
-              <p className="text-sm font-medium text-gray-300">Recommended Universities:</p>
-              {message.collegeRecommendations.map((college, index) => {
-                if (!college || typeof college !== 'object') {
-                  return null;
-                }
-                return (
-                  <div
-                    key={index}
-                    className="p-4 bg-white/5 backdrop-blur-lg border border-white/20 rounded-xl"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <h4 className="font-semibold text-white">{college.name || 'University'}</h4>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          college.category === "DREAM" ? "bg-red-500/20 border-red-500 text-red-400" :
-                          college.category === "TARGET" ? "bg-blue-500/20 border-blue-500 text-blue-400" :
-                          "bg-green-500/20 border-green-500 text-green-400"
-                        }`}>
-                          {college.category || 'UNIVERSITY'}
-                        </span>
-                      </div>
-                      <div className="text-xs text-gray-400">
-                        {college.country || 'Unknown'} • Rank: {college.rank || 'N/A'}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-300 mb-2">{college.field || 'Various fields'}</p>
-                    <p className="text-xs text-gray-400">{college.reason || 'Good fit for your profile'}</p>
-                    <div className="flex items-center space-x-4 text-xs">
-                      <span className={`px-2 py-1 rounded-full ${
-                        college.acceptanceProbability === "High" ? "bg-green-500/20 border-green-500 text-green-400" :
-                        college.acceptanceProbability === "Medium" ? "bg-yellow-500/20 border-yellow-500 text-yellow-400" :
-                        "bg-red-500/20 border-red-500 text-red-400"
-                      }`}>
-                        {college.acceptanceProbability || 'Unknown'} Acceptance
-                      </span>
-                      <span className="px-2 py-1 rounded-full bg-gray-500/20 border-gray-500 text-gray-400">
-                        {college.internshipScore || 'Unknown'} Internship Score
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={async () => {
-                          try {
-                            await shortlistUniversity(null, college.name);
-                            setActionMessage(`Shortlisted ${college.name || 'University'}`);
-                            setTimeout(() => setActionMessage(""), 3000);
-                          } catch (error) {
-                            console.error("Failed to shortlist:", error);
-                            setActionMessage(`Failed to shortlist ${college.name}`);
-                            setTimeout(() => setActionMessage(""), 3000);
-                          }
-                        }}
-                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors"
-                      >
-                        Shortlist
-                      </button>
-                      {college.category !== "DREAM" && (
-                        <button
-                          onClick={async () => {
-                            try {
-                              // First shortlist the university, then lock it
-                              await shortlistUniversity(null, college.name);
-                              await lockUniversity(null, college.name);
-                              setActionMessage(`Shortlisted and locked ${college.name || 'University'}`);
-                              setTimeout(() => setActionMessage(""), 3000);
-                            } catch (error) {
-                              console.error("Failed to lock:", error);
-                              let errorMessage = `Failed to lock ${college.name}`;
-                              
-                              // Show specific error message if available
-                              if (error.response?.data?.message) {
-                                errorMessage = error.response.data.message;
-                              }
-                              
-                              setActionMessage(errorMessage);
-                              setTimeout(() => setActionMessage(""), 5000);
-                            }
-                          }}
-                          className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
-                        >
-                          Lock
-                        </button>
+          {/* Render college recommendations as simple text with auto-shortlisting */}
+          {message.collegeRecommendations && Array.isArray(message.collegeRecommendations) && message.collegeRecommendations.length > 0 && (
+            <div className="mt-3 p-3 bg-white/5 backdrop-blur-lg border border-white/10 rounded-lg">
+              <p className="text-sm font-medium text-gray-300 mb-2">Recommended Universities:</p>
+              <div className="flex flex-wrap gap-2">
+                {message.collegeRecommendations.map((college, index) => {
+                  if (!college || typeof college !== 'object') {
+                    return null;
+                  }
+                  return (
+                    <div
+                      key={index}
+                      className="px-3 py-1 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-full text-sm"
+                    >
+                      {college.name || 'University'}
+                      {college.category && (
+                        <span className="ml-1 text-xs text-blue-400">({college.category})</span>
                       )}
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+              <p className="text-xs text-green-400 mt-2">✓ Universities have been auto-shortlisted to your profile</p>
             </div>
           )}
         </div>

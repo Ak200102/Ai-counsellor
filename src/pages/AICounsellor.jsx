@@ -397,8 +397,6 @@ export default function AICounsellor() {
         - Locked University: ${user?.profile?.lockedUniversity?.universityId?.name || 'None'}
         - Number of Shortlisted: ${user?.shortlistedUniversities?.length || 0}
         
-        DEBUG: Shortlisted Universities Raw: ${JSON.stringify(user?.shortlistedUniversities || [])}
-        
         📊 PROFILE COMPLETION: ${profile.completionPercentage || 0}%
         
         AI ANALYSIS INSTRUCTIONS:

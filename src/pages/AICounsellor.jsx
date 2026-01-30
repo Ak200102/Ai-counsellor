@@ -46,8 +46,20 @@ export default function AICounsellor() {
   const [chatHistory, setChatHistory] = useState([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [autoSaveIndicator, setAutoSaveIndicator] = useState(false);
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
+
+  // Function to refresh user data after actions
+  const refreshUserData = async () => {
+    try {
+      const userData = await getMe();
+      setUser(userData);
+      console.log("User data refreshed after action");
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    }
+  };
 
   // Auto-save conversation on unmount or when leaving page
   useEffect(() => {
@@ -429,14 +441,20 @@ export default function AICounsellor() {
         
         if (safeResponse.action === "SHORTLIST_UNIVERSITY" && safeResponse.universityShortlisted) {
           console.log("University shortlisted:", safeResponse.universityShortlisted);
+          // Refresh user data to show new universities in Universities page
+          await refreshUserData();
         }
         
         if (safeResponse.action === "CREATE_TASK" && safeResponse.taskCreated) {
           console.log("Task created:", safeResponse.taskCreated);
+          // Refresh user data to show new task in Tasks page
+          await refreshUserData();
         }
         
         if (safeResponse.action === "LOCK_UNIVERSITY" && safeResponse.universityLocked) {
           console.log("University locked:", safeResponse.universityLocked);
+          // Refresh user data to show locked university in Universities page
+          await refreshUserData();
           setTimeout(() => {
             navigate("/application-guidance");
           }, 2000);
@@ -553,6 +571,8 @@ export default function AICounsellor() {
                             await shortlistUniversity(null, action.universityName);
                             setActionMessage(`Shortlisted ${action.universityName || 'University'}`);
                           }
+                          // Refresh user data to show new university in Universities page
+                          await refreshUserData();
                         } else if (action.action === "CREATE_TASK") {
                           await createTask({
                             title: action.taskTitle,
@@ -562,6 +582,8 @@ export default function AICounsellor() {
                             status: 'NOT_STARTED'
                           });
                           setActionMessage(`Created task: ${action.taskTitle || 'Task'}`);
+                          // Refresh user data to show new task in Tasks page
+                          await refreshUserData();
                         } else if (action.action === "LOCK_UNIVERSITY") {
                           console.log("Executing LOCK_UNIVERSITY action for:", action.universityName);
                           let universityId = action.universityId;
@@ -594,11 +616,11 @@ export default function AICounsellor() {
                             console.log("About to call lockUniversity with ID:", universityId);
                             try {
                               await lockUniversity(universityId);
-                              console.log("lockUniversity call succeeded");
                               setActionMessage(`Locked ${action.universityName || 'University'}`);
                               // Set flag to indicate lock action happened
                               sessionStorage.setItem('lastUniversityLock', Date.now());
-                              console.log('Set lock action flag in sessionStorage');
+                              // Refresh user data to show locked university in Universities page
+                              await refreshUserData();
                             } catch (lockError) {
                               console.error("lockUniversity call failed:", lockError);
                               setActionMessage(`Failed to lock ${action.universityName || 'University'}`);
@@ -608,7 +630,8 @@ export default function AICounsellor() {
                             setActionMessage(`Locked ${action.universityName || 'University'}`);
                             // Set flag to indicate lock action happened
                             sessionStorage.setItem('lastUniversityLock', Date.now());
-                            console.log('Set lock action flag in sessionStorage');
+                            // Refresh user data to show locked university in Universities page
+                            await refreshUserData();
                           }
                         }
                         setTimeout(() => setActionMessage(""), 3000);

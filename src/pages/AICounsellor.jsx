@@ -442,10 +442,12 @@ export default function AICounsellor() {
         // Only include safe, validated data from response.data
         actionableNextSteps: Array.isArray(safeResponse.actionableNextSteps) ? safeResponse.actionableNextSteps : [],
         collegeRecommendations: Array.isArray(safeResponse.collegeRecommendations) ? safeResponse.collegeRecommendations : [],
+        profileAnalysis: safeResponse.profileAnalysis && typeof safeResponse.profileAnalysis === 'object' ? safeResponse.profileAnalysis : null,
         profileAssessment: safeResponse.profileAssessment && typeof safeResponse.profileAssessment === 'object' ? safeResponse.profileAssessment : null,
         action: safeResponse.action || "NONE",
         task: safeResponse.task && typeof safeResponse.task === 'object' ? safeResponse.task : null,
-        universityName: safeResponse.universityName || null
+        universityName: safeResponse.universityName || null,
+        autoShortlistedResults: Array.isArray(safeResponse.autoShortlistedResults) ? safeResponse.autoShortlistedResults : []
       };
       
       console.log("AI Message to display:", aiMsg);
@@ -474,6 +476,13 @@ export default function AICounsellor() {
           console.log("Task created:", safeResponse.taskCreated);
           // Refresh user data to show new task in Tasks page
           await refreshUserData();
+        }
+
+        if (safeResponse.action === "AUTO_SHORTLIST_MULTIPLE" && safeResponse.autoShortlistedResults) {
+          console.log("Auto-shortlisted universities:", safeResponse.autoShortlistedResults);
+          setActionMessage(`Auto-shortlisted ${safeResponse.autoShortlistedResults.length || 0} universities`);
+          await refreshUserData();
+          setTimeout(() => setActionMessage(""), 3000);
         }
         
         if (safeResponse.action === "LOCK_UNIVERSITY" && safeResponse.universityLocked) {

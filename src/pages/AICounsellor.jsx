@@ -367,10 +367,8 @@ export default function AICounsellor() {
         7. Provide personalized advice based on complete profile
       `;
       
-      // Combine profile context with user message
-      const enhancedMessage = `${profileContext}\n\nUser Question: ${inputMessage}`;
-      
-      const response = await askCounsellor(enhancedMessage);
+      // Send only the user message - backend will handle profile data separately
+      const response = await askCounsellor(inputMessage);
       console.log("AI Response received:", response);
       console.log("AI Recommendations Response:", response.data);
       console.log("AI Response actionableNextSteps:", response.data.actionableNextSteps);

@@ -363,6 +363,7 @@ export default function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8 }}
             whileHover={{ scale: 1.05, y: -5 }}
+            onClick={() => navigate("/analytics")}
             whileTap={{ scale: 0.95 }}
             className="bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-white/20 hover:border-white/30 transition-all group"
           >

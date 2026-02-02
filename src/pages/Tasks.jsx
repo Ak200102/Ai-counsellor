@@ -38,6 +38,8 @@ function Tasks() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [selectedTask, setSelectedTask] = useState(null);
   const [showTaskModal, setShowTaskModal] = useState(false);
+  const [lastTaskCount, setLastTaskCount] = useState(0);
+  const [newTaskDetected, setNewTaskDetected] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -47,8 +49,17 @@ function Tasks() {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
     
+    // Set up periodic refresh to check for new auto-created tasks
+    const refreshInterval = setInterval(() => {
+      console.log("=== PERIODIC TASK REFRESH ===");
+      fetchTasks();
+    }, 10000); // Check every 10 seconds
+    
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearInterval(refreshInterval);
+    };
   }, []);
 
   const fetchTasks = async () => {
@@ -56,9 +67,19 @@ function Tasks() {
       console.log("=== FETCHING TASKS ===");
       setLoading(true);
       const response = await getTasks();
-      console.log("Tasks response:", response.data);
-      setTasks(response.data || []);
-      console.log("Tasks set:", response.data || []);
+      const newTasks = response.data || [];
+      console.log("Tasks response:", newTasks);
+      
+      // Check if new tasks were added
+      if (newTasks.length > lastTaskCount && lastTaskCount > 0) {
+        console.log(`🎉 New tasks detected! ${newTasks.length} vs ${lastTaskCount}`);
+        setNewTaskDetected(true);
+        setTimeout(() => setNewTaskDetected(false), 3000);
+      }
+      
+      setTasks(newTasks);
+      setLastTaskCount(newTasks.length);
+      console.log("Tasks set:", newTasks);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
       // Set empty array on error
@@ -329,6 +350,19 @@ function Tasks() {
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto">
+        {/* New Task Notification */}
+        {newTaskDetected && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="mb-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg flex items-center space-x-3"
+          >
+            <SparklesIcon className="w-5 h-5 text-green-400" />
+            <span className="text-green-400 font-medium">🎉 New AI-generated tasks detected!</span>
+          </motion.div>
+        )}
+        
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">

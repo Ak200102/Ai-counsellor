@@ -53,7 +53,7 @@ function Tasks() {
     const refreshInterval = setInterval(() => {
       console.log("=== PERIODIC TASK REFRESH ===");
       fetchTasks();
-    }, 10000); // Check every 10 seconds
+    }, 5000); // Check every 5 seconds (reduced from 10)
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
@@ -65,10 +65,13 @@ function Tasks() {
   const fetchTasks = async () => {
     try {
       console.log("=== FETCHING TASKS ===");
+      console.log("Current task count:", tasks.length);
+      console.log("Last task count:", lastTaskCount);
       setLoading(true);
       const response = await getTasks();
       const newTasks = response.data || [];
       console.log("Tasks response:", newTasks);
+      console.log("New task count:", newTasks.length);
       
       // Check if new tasks were added
       if (newTasks.length > lastTaskCount && lastTaskCount > 0) {
@@ -80,6 +83,7 @@ function Tasks() {
       setTasks(newTasks);
       setLastTaskCount(newTasks.length);
       console.log("Tasks set:", newTasks);
+      console.log("AI tasks found:", newTasks.filter(t => t.createdBy === "AI").length);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
       // Set empty array on error
@@ -374,14 +378,26 @@ function Tasks() {
               <p className="text-gray-300">Personalized tasks created by your AI counsellor</p>
             </div>
           </div>
-          <button
-            onClick={handleRegenerateTasks}
-            disabled={loading}
-            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-          >
-            <RocketLaunchIcon className="w-4 h-4" />
-            <span>Refresh Tasks</span>
-          </button>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => {
+                console.log("=== MANUAL REFRESH CLICKED ===");
+                fetchTasks();
+              }}
+              disabled={loading}
+              className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-all disabled:opacity-50"
+            >
+              🔄 Refresh Now
+            </button>
+            <button
+              onClick={handleRegenerateTasks}
+              disabled={loading}
+              className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+            >
+              <RocketLaunchIcon className="w-4 h-4" />
+              <span>Regenerate Tasks</span>
+            </button>
+          </div>
         </div>
 
         {/* Stats Overview */}

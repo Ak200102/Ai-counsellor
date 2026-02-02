@@ -67,14 +67,21 @@ function Tasks() {
 
   const handleTaskAction = async (taskId, action) => {
     try {
+      console.log("=== TASK ACTION START ===");
+      console.log("Task ID:", taskId);
+      console.log("Action:", action);
+      
       if (action === 'complete') {
-        await updateTaskStatus(taskId, { status: 'COMPLETED' });
+        console.log("Completing task...");
+        await updateTaskStatus(taskId, 'COMPLETED');
         setCelebration(true);
         setTimeout(() => setCelebration(false), 2000);
       } else if (action === 'start') {
-        await updateTaskStatus(taskId, { status: 'IN_PROGRESS' });
+        console.log("Starting task...");
+        await updateTaskStatus(taskId, 'IN_PROGRESS');
       }
       
+      console.log("Task action completed, refreshing tasks...");
       // Refresh tasks after update
       fetchTasks();
     } catch (error) {

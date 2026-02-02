@@ -18,7 +18,12 @@ import {
   StarIcon,
   HandThumbUpIcon,
   RocketLaunchIcon,
-  EyeIcon
+  EyeIcon,
+  XMarkIcon,
+  InformationCircleIcon,
+  ChartBarIcon,
+  BookmarkIcon,
+  LinkIcon
 } from "@heroicons/react/24/outline";
 import { getTasks, updateTaskStatus } from "../helpers/endpoints.js";
 
@@ -31,6 +36,8 @@ function Tasks() {
   const [hoveredTask, setHoveredTask] = useState(null);
   const [celebration, setCelebration] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [showTaskModal, setShowTaskModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -73,6 +80,100 @@ function Tasks() {
     } catch (error) {
       console.error("Failed to update task:", error);
     }
+  };
+
+  const handleViewDetails = (task) => {
+    setSelectedTask(task);
+    setShowTaskModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowTaskModal(false);
+    setTimeout(() => setSelectedTask(null), 300);
+  };
+
+  const handleTaskActionFromModal = async (action) => {
+    if (selectedTask) {
+      await handleTaskAction(selectedTask._id, action);
+      handleCloseModal();
+    }
+  };
+
+  const getCategoryIcon = (category) => {
+    switch (category) {
+      case 'PROFILE':
+        return <UserIcon className="w-6 h-6" />;
+      case 'EXAM':
+        return <AcademicCapIcon className="w-6 h-6" />;
+      case 'DOCUMENTS':
+        return <DocumentTextIcon className="w-6 h-6" />;
+      case 'APPLICATION':
+        return <CalendarIcon className="w-6 h-6" />;
+      case 'SOP':
+        return <DocumentTextIcon className="w-6 h-6" />;
+      default:
+        return <CheckCircleIcon className="w-6 h-6" />;
+    }
+  };
+
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case 'PROFILE':
+        return "text-blue-400 bg-blue-500/20 border-blue-500";
+      case 'EXAM':
+        return "text-green-400 bg-green-500/20 border-green-500";
+      case 'DOCUMENTS':
+        return "text-yellow-400 bg-yellow-500/20 border-yellow-500";
+      case 'APPLICATION':
+        return "text-purple-400 bg-purple-500/20 border-purple-500";
+      case 'SOP':
+        return "text-pink-400 bg-pink-500/20 border-pink-500";
+      default:
+        return "text-gray-400 bg-gray-500/20 border-gray-500";
+    }
+  };
+
+  const getTaskSteps = (task) => {
+    let steps = [];
+    
+    if (task.category === 'PROFILE') {
+      steps = [
+        "Complete your academic information",
+        "Add your test scores (IELTS, GRE, etc.)",
+        "Set your study goals and preferences",
+        "Update your budget and funding plan"
+      ];
+    } else if (task.category === 'EXAM') {
+      steps = [
+        "Register for the exam",
+        "Prepare study materials",
+        "Practice with mock tests",
+        "Schedule your test date"
+      ];
+    } else if (task.category === 'DOCUMENTS') {
+      steps = [
+        "Gather required documents",
+        "Get transcripts from your school",
+        "Prepare recommendation letters",
+        "Write your personal statement"
+      ];
+    } else if (task.category === 'APPLICATION') {
+      steps = [
+        "Research university requirements",
+        "Fill out application forms",
+        "Submit required documents",
+        "Pay application fees"
+      ];
+    } else if (task.category === 'SOP') {
+      steps = [
+        "Research program requirements",
+        "Outline your story and goals",
+        "Write first draft",
+        "Get feedback and revise"
+      ];
+    }
+    
+    return steps;
   };
 
   const filteredTasks = tasks.filter(task => {
@@ -468,7 +569,7 @@ function Tasks() {
                             </button>
                           )}
                           <button
-                            onClick={() => navigate("/universities")}
+                            onClick={() => handleViewDetails(task)}
                             className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors"
                           >
                             View Details
@@ -484,7 +585,249 @@ function Tasks() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Task Details Modal */}
+      <AnimatePresence>
+        {showTaskModal && selectedTask && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={handleCloseModal}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", damping: 20 }}
+              className="bg-gradient-to-br from-gray-900 via-indigo-900 to-purple-900 rounded-2xl border border-white/20 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="p-6 border-b border-white/10">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-4">
+                    <div className={`w-16 h-16 rounded-xl flex items-center justify-center ${getCategoryColor(selectedTask.category)}`}>
+                      {getCategoryIcon(selectedTask.category)}
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-white mb-2">{selectedTask.title}</h2>
+                      <div className="flex items-center space-x-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(selectedTask.status)}`}>
+                          {getStatusIcon(selectedTask.status)}
+                          <span className="ml-1">{selectedTask.status.replace('_', ' ')}</span>
+                        </span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPriorityColor(selectedTask.priority)}`}>
+                          {selectedTask.priority} priority
+                        </span>
+                        {selectedTask.createdBy === "AI" && (
+                          <span className="px-3 py-1 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 text-purple-300 text-xs rounded-full flex items-center gap-1">
+                            <SparklesIcon className="w-3 h-3" />
+                            AI Created
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleCloseModal}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                  >
+                    <XMarkIcon className="w-5 h-5 text-gray-400" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-6 space-y-6">
+                {/* Description */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <InformationCircleIcon className="w-5 h-5 mr-2 text-blue-400" />
+                    Task Description
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed">{selectedTask.description}</p>
+                  {selectedTask.reason && (
+                    <div className="mt-3 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+                      <p className="text-sm text-blue-300">
+                        <span className="font-semibold">Why this matters:</span> {selectedTask.reason}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Task Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center mb-2">
+                      <CalendarIcon className="w-5 h-5 mr-2 text-yellow-400" />
+                      <h4 className="font-semibold text-white">Due Date</h4>
+                    </div>
+                    <p className="text-gray-300">
+                      {new Date(selectedTask.dueDate).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                      })}
+                    </p>
+                    <p className="text-sm text-gray-400 mt-1">
+                      {Math.ceil((new Date(selectedTask.dueDate) - new Date()) / (1000 * 60 * 60 * 24))} days remaining
+                    </p>
+                  </div>
+
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center mb-2">
+                      <SparklesIcon className="w-5 h-5 mr-2 text-purple-400" />
+                      <h4 className="font-semibold text-white">Points</h4>
+                    </div>
+                    <p className="text-2xl font-bold text-purple-400">{selectedTask.points || 10}</p>
+                    <p className="text-sm text-gray-400">Experience points</p>
+                  </div>
+
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center mb-2">
+                      <ChartBarIcon className="w-5 h-5 mr-2 text-green-400" />
+                      <h4 className="font-semibold text-white">Category</h4>
+                    </div>
+                    <p className="text-white capitalize">{selectedTask.category}</p>
+                    <p className="text-sm text-gray-400">Task type</p>
+                  </div>
+
+                  <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                    <div className="flex items-center mb-2">
+                      <ClockIcon className="w-5 h-5 mr-2 text-blue-400" />
+                      <h4 className="font-semibold text-white">Created</h4>
+                    </div>
+                    <p className="text-white">
+                      {new Date(selectedTask.createdAt).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric' 
+                      })}
+                    </p>
+                    <p className="text-sm text-gray-400">by {selectedTask.createdBy}</p>
+                  </div>
+                </div>
+
+                {/* Progress Section */}
+                {selectedTask.status === "IN_PROGRESS" && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                      <ChartBarIcon className="w-5 h-5 mr-2 text-green-400" />
+                      Progress
+                    </h3>
+                    <div className="w-full bg-gray-700 rounded-full h-3">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${selectedTask.progress || 0}%` }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-gradient-to-r from-blue-500 to-indigo-500 h-3 rounded-full"
+                      />
+                    </div>
+                    <p className="text-sm text-gray-400 mt-2">{selectedTask.progress || 0}% complete</p>
+                  </div>
+                )}
+
+                {/* Task Steps */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <BookmarkIcon className="w-5 h-5 mr-2 text-yellow-400" />
+                    Steps to Complete
+                  </h3>
+                  <div className="space-y-2">
+                    {getTaskSteps(selectedTask).map((step, index) => (
+                      <div key={index} className="flex items-start space-x-3 p-3 bg-white/5 rounded-lg border border-white/10">
+                        <div className="w-6 h-6 rounded-full bg-blue-500/20 border border-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs text-blue-400 font-semibold">{index + 1}</span>
+                        </div>
+                        <p className="text-gray-300 text-sm">{step}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Related Links */}
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
+                    <LinkIcon className="w-5 h-5 mr-2 text-purple-400" />
+                    Quick Actions
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedTask.category === 'PROFILE' && (
+                      <button
+                        onClick={() => { navigate('/profile'); handleCloseModal(); }}
+                        className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        Go to Profile
+                      </button>
+                    )}
+                    {selectedTask.category === 'APPLICATION' && (
+                      <button
+                        onClick={() => { navigate('/applications'); handleCloseModal(); }}
+                        className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        View Applications
+                      </button>
+                    )}
+                    {selectedTask.category === 'UNIVERSITY' && (
+                      <button
+                        onClick={() => { navigate('/universities'); handleCloseModal(); }}
+                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        Browse Universities
+                      </button>
+                    )}
+                    {selectedTask.university && (
+                      <button
+                        onClick={() => { navigate(`/universities/${selectedTask.university}`); handleCloseModal(); }}
+                        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
+                      >
+                        View University
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-6 border-t border-white/10 bg-black/20">
+                <div className="flex items-center justify-between">
+                  <div className="text-sm text-gray-400">
+                    Task ID: {selectedTask._id}
+                  </div>
+                  <div className="flex gap-3">
+                    {selectedTask.status === "NOT_STARTED" && (
+                      <button
+                        onClick={() => handleTaskActionFromModal('start')}
+                        className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                      >
+                        Start Task
+                      </button>
+                    )}
+                    {selectedTask.status === "IN_PROGRESS" && (
+                      <button
+                        onClick={() => handleTaskActionFromModal('complete')}
+                        className="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+                      >
+                        Mark Complete
+                      </button>
+                    )}
+                    <button
+                      onClick={handleCloseModal}
+                      className="px-6 py-2 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      </div>
     </div>
-  </div>
   );
 }

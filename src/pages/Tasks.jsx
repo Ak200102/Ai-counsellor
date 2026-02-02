@@ -53,9 +53,12 @@ function Tasks() {
 
   const fetchTasks = async () => {
     try {
+      console.log("=== FETCHING TASKS ===");
       setLoading(true);
       const response = await getTasks();
+      console.log("Tasks response:", response.data);
       setTasks(response.data || []);
+      console.log("Tasks set:", response.data || []);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
       // Set empty array on error

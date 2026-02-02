@@ -51,9 +51,14 @@ function Tasks() {
     
     // Set up periodic refresh to check for new auto-created tasks
     const refreshInterval = setInterval(() => {
-      console.log("=== PERIODIC TASK REFRESH ===");
-      fetchTasks();
-    }, 5000); // Check every 5 seconds (reduced from 10)
+      // Prevent infinite reloads - only refresh if not currently loading
+      if (!loading) {
+        console.log("=== PERIODIC TASK REFRESH ===");
+        fetchTasks();
+      } else {
+        console.log("=== SKIPPING REFRESH - STILL LOADING ===");
+      }
+    }, 15000); // Check every 15 seconds (increased to reduce load)
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => {
@@ -73,8 +78,8 @@ function Tasks() {
       console.log("Tasks response:", newTasks);
       console.log("New task count:", newTasks.length);
       
-      // Check if new tasks were added
-      if (newTasks.length > lastTaskCount && lastTaskCount > 0) {
+      // Check if new tasks were added (only after initial load)
+      if (lastTaskCount > 0 && newTasks.length > lastTaskCount) {
         console.log(`🎉 New tasks detected! ${newTasks.length} vs ${lastTaskCount}`);
         setNewTaskDetected(true);
         setTimeout(() => setNewTaskDetected(false), 3000);
@@ -84,6 +89,7 @@ function Tasks() {
       setLastTaskCount(newTasks.length);
       console.log("Tasks set:", newTasks);
       console.log("AI tasks found:", newTasks.filter(t => t.createdBy === "AI").length);
+      console.log("Updated lastTaskCount to:", newTasks.length);
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
       // Set empty array on error

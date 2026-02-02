@@ -51,6 +51,7 @@ export const unlockUniversity = () => api.post("/api/universities/unlock");
 export const getTasks = () => api.get("/api/tasks");
 export const createTask = (data) => api.post("/api/tasks", data);
 export const updateTaskStatus = (taskId, status) => api.put(`/api/tasks/${taskId}/status`, { status });
+export const regenerateTasks = () => api.post("/api/tasks/regenerate");
 
 // applications
 export const getApplications = () => api.get("/api/applications");

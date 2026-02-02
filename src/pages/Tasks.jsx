@@ -25,7 +25,7 @@ import {
   BookmarkIcon,
   LinkIcon
 } from "@heroicons/react/24/outline";
-import { getTasks, updateTaskStatus } from "../helpers/endpoints.js";
+import { getTasks, updateTaskStatus, regenerateTasks } from "../helpers/endpoints.js";
 
 export default withAiCounsellingCheck(Tasks, "Tasks");
 
@@ -96,6 +96,18 @@ function Tasks() {
     if (selectedTask) {
       await handleTaskAction(selectedTask._id, action);
       handleCloseModal();
+    }
+  };
+
+  const handleRegenerateTasks = async () => {
+    try {
+      setLoading(true);
+      await regenerateTasks();
+      await fetchTasks(); // Refresh the tasks list
+    } catch (error) {
+      console.error("Failed to regenerate tasks:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -315,9 +327,17 @@ function Tasks() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Tasks</h1>
-              <p className="text-gray-300">Track your academic journey progress</p>
+              <p className="text-gray-300">AI-powered personalized task generation</p>
             </div>
           </div>
+          <button
+            onClick={handleRegenerateTasks}
+            disabled={loading}
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+          >
+            <RocketLaunchIcon className="w-4 h-4" />
+            <span>Refresh Tasks</span>
+          </button>
         </div>
 
         {/* Stats Overview */}
